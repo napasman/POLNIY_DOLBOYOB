@@ -1,0 +1,118 @@
+{% extends 'authentication/base.html' %}
+{% block contents %}
+
+{% load auth_extras %}
+
+
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Line Chart</h4>
+    <div class="chart-content">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ labels|safe }},
+      datasets: [
+        {% for profile in profiles %}
+        {
+          label: '{{ profile.wordName }}',
+          data: [
+            {{ profile.wordMention_May_22 }},
+            {{ profile.wordMention_Jun_22 }},
+            {{ profile.wordMention_Jul_22 }},
+            {{ profile.wordMention_Aug_22 }},
+            {{ profile.wordMention_Sep_22 }},
+            {{ profile.wordMention_Oct_22 }},
+            {{ profile.wordMention_Nov_22 }},
+            {{ profile.wordMention_Dec_22 }},
+            {{ profile.wordMention_Jan_23 }},
+            {{ profile.wordMention_Feb_23 }},
+            {{ profile.wordMention_Mar_23 }},
+            {{ profile.wordMention_Apr_23 }}
+          ],
+          borderColor: '{{ profile.borderColor }}',
+          pointColor
+          : '{{ profile.pointBackgroundColor }}',
+          backgroundColor: '{{ profile.backgroundColor }}',
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHitRadius: 5,
+          pointHoverRadius: 5,
+          fill: true,
+          tension: 0.3
+        }
+        {% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ]
+    },
+    options: {
+      scales: {
+        x: {
+          display: true,
+          grid: {
+            display: false
+          },
+          ticks: {
+            display: true,
+            fontColor: '#b9c0d3',
+            padding: 10
+          }
+        },
+        y: {
+          display: true,
+          grid: {
+            color: '#ebedf2',
+            drawBorder: false,
+            borderDash: [8, 4],
+            zeroLineWidth: 1,
+            zeroLineColor: '#ebedf2',
+            zeroLineBorderDash: [8, 4]
+          },
+          ticks: {
+            display: true,
+            fontColor: '#b9c0d3',
+            padding: 12
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 16,
+            boxWidth: 10,
+            fontColor: '#b9c0d3'
+          }
+        },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#272d41',
+          titleAlign: 'left',
+          titleFontColor: '#ffffff',
+          bodyAlign: 'left',
+          bodyFontColor: '#ffffff',
+          bodySpacing: 6,
+          xAlign: 'center',
+          yAlign: 'bottom',
+          displayColors: false,
+          cornerRadius: 4,
+          caretSize: 6
+        }
+      }
+    }
+  });
+</script>
+
+
+{% endblock %}

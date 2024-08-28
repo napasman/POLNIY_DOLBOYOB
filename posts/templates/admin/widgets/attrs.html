@@ -1,0 +1,5 @@
+{% for name, value in widget.attrs.items %}
+    {% if name != 'class' %}
+        {{ name }}="{{ value }}"
+    {% endif %}
+{% endfor %}

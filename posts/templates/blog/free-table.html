@@ -1,0 +1,421 @@
+{% load static %}
+{% if table == 'channels' %}
+<style>
+    .bg-succesS-soft {
+        background-color: rgba(0, 255, 0, 0.3); /* Lighter green color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+
+    .bg-dangeR-soft {
+        background-color: rgba(255, 0, 0, 0.3); /* Lighter red color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+    
+    .truncate-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px; /* Adjust the max-width to your desired length */
+    }
+    .my-alert {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+    }
+    
+    .my-alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+    
+    .my-icon {
+      margin-right: 0.5rem;
+    }
+    
+
+    .my-close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      background-color: transparent;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: inherit;
+    }
+    
+    th {
+    FONT-WEIGHT: NORMAL;
+     font-size: 14.5px;
+}
+p {
+    font-size: 14.5px;
+}
+</style>
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Link</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Memb</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Msg qlt</th>
+            <th scope="col">Online</th>
+            <th scope="col">Created</th>
+                 <th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send messages">MS</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send media messages">MMS</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send polls">PL</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can invite users ">IN</span>
+  </strong>
+</th>
+{#            <th scope="col">OM</th>#}
+{#            <th scope="col">WP</th>#}
+        </tr>
+        </thead>
+        <tbody>
+             {% for ad_link in ad_links %}
+      <tr>
+          <td><a href="https://teleteg.com/pricing#advertise" >
+              <p style="text-decoration: underline; font-weight:bold; " >AD</p>
+            </a></td>
+        <td>
+          <a href="{{ ad_link.link }}" target="_blank">
+            <p class="truncate-text">{{ ad_link.title }}</p>
+          </a>
+        </td>
+        <td>
+            <p class="truncate-text">{{ ad_link.title }}</p>
+          </a>
+        </td>
+        <td>
+          {% if ad_link.description %}
+              <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ ad_link.description }}">{{ ad_link.description }}</p>
+          {% else %}
+              <p class="truncate-text">None</p>
+          {% endif %}
+      </td>
+      
+            <td>{{ ad_link.members }}</td>
+      </tr>
+      {% endfor %}
+        {% for result in table_results %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+
+                <td>
+                    <a href="https://t.me/{{ result.username }}" target="_blank">
+                        <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                           data-bs-title="{{ result.username }}">{{ result.username }}</p>
+                    </a>
+                </td>
+
+                <td><p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                       data-bs-title="{{ result.title }}">{{ result.title }}</p></td>
+
+                <td><p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                       data-bs-title="{{ result.description }}">{{ result.description }}</p></td>
+
+                <td>{{ result.members_count }}</td>
+                <td>{{ result.rating }}</td>
+                <td>{{ result.rating_by_messages }}</td>
+                <td>{{ result.online }}</td>
+                <td>{{ result.creation_date }}</td>
+                <td>
+                    {% if result.can_send_messages|lower == 'true' %}
+                        <span class="badge rounded-pill bg-succesS-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-dangeR-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if result.can_send_media_messages|lower == 'true' %}
+                        <span class="badge rounded-pill bg-succesS-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-dangeR-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if result.can_send_polls|lower == 'true' %}
+                        <span class="badge rounded-pill bg-succesS-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-dangeR-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if result.can_invite_users|lower == 'true' %}
+                        <span class="badge rounded-pill bg-succesS-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% else %}
+                        <span class="badge rounded-pill bg-dangeR-soft">
+                            <p class="text-hide"></p>
+                        </span>
+                    {% endif %}
+                </td>
+{#                <td>#}
+{#                    {% if result.can_send_other_messages|lower == 'true' %}#}
+{#                        <span class="badge rounded-pill bg-succesS-soft">#}
+{#                            <p class="text-hide"></p>#}
+{#                        </span>#}
+{#                    {% else %}#}
+{#                        <span class="badge rounded-pill bg-dangeR-soft">#}
+{#                            <p class="text-hide"></p>#}
+{#                        </span>#}
+{#                    {% endif %}#}
+{#                </td>#}
+{#                <td>#}
+{#                    {% if result.can_add_web_page_previews|lower == 'true' %}#}
+{#                        <span class="badge rounded-pill bg-succesS-soft">#}
+{#                            <p class="text-hide"></p>#}
+{#                        </span>#}
+{#                    {% else %}#}
+{#                        <span class="badge rounded-pill bg-dangeR-soft">#}
+{#                            <p class="text-hide"></p>#}
+{#                        </span>#}
+{#                    {% endif %}#}
+{#                </td>#}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+
+
+    {% if table == 'users' %}
+    <style>
+      .bg-success-soft {
+        background-color: rgba(0, 255, 0, 0.3);
+        /* Lighter green color with opacity */
+        display: inline-block;
+        width: 20px;
+        /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%;
+        /* Ensure the element is rendered as a circle */
+      }
+
+      .bg-danger-soft {
+        background-color: rgba(255, 0, 0, 0.3);
+        /* Lighter red color with opacity */
+        display: inline-block;
+        width: 20px;
+        /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%;
+        /* Ensure the element is rendered as a circle */
+      }
+
+      .truncate-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px;
+        /* Adjust the max-width to your desired length */
+      }
+
+      .my-alert {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+      }
+
+      .my-alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+
+      .my-icon {
+        margin-right: 0.5rem;
+      }
+
+      .my-icon-block-helper {
+        /* Add your custom icon styles here */
+      }
+
+      .my-close-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.75rem 1.25rem;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: inherit;
+      }
+
+      .text-google-font {
+        font-weight: bold;
+      }
+
+      td:first-child,
+      th:first-child {
+        padding-left: 10px;
+        /* Adjust the left padding to move the content more to the left */
+      }
+
+      .hide-column {
+        display: none;
+        /* Hide the columns with this class */
+      }
+
+      .table-container {
+        width: 50%;
+        /* Adjust the width as desired */
+        margin: 0;
+        /* Center the container horizontally */
+      }
+      .customplaceholder{
+        width:56%;
+      }
+ 
+  .prva-kolona{
+      width: 20px;
+  }
+   .predzadnja-kolona{
+      width: 90px;
+  }
+    </style>
+
+      <div class="table-container">
+ 
+
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th class="first-col" scope="col"><strong>#</strong></th>
+              <th scope="col"><strong>Username</strong></th>
+              <th scope="col"><strong>First name</strong></th>
+              <th scope="col"><strong>Last name</strong></th>
+              <th scope="col"><strong>User ID</strong></th>
+              <th scope="col"><strong>Rating</strong></th>
+
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for ad_link in ad_links %}
+            <tr>
+              <td><a href="https://teleteg.com/pricing#advertise" >
+                <p style="text-decoration: underline; font-weight:bold; "  class="truncate-text prva-kolona">AD</p>
+              </a></td>
+              <td>
+                <a href="{{ ad_link.link }}" target="_blank">
+                  <p class="truncate-text">{{ ad_link.title }}</p>
+                </a>
+              </td>
+              <td>
+                <p class="truncate-text">{{ ad_link.title }}</p>
+                </a>
+              </td>
+              <td>
+                {% if ad_link.description %}
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ ad_link.description }}">{{ ad_link.description }}</p>
+                {% else %}
+                <p class="truncate-text">None</p>
+                {% endif %}
+              </td>
+
+              <td>{{ ad_link.members }}</td>
+            </tr>
+            {% endfor %}
+            {% for result in table_results %}
+            <tr>
+              <td>{{ forloop.counter}} </td>
+              <td>
+                <a href="https://t.me/{{ result.username }}" target="_blank">
+                  <p class="truncate-text">{{ result.username }}</p>
+                </a>
+              </td>
+              <td>
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ result.first_name }}">{{ result.first_name }}</p>
+              </td>
+              <td>
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ result.last_name }}">{{ result.last_name }}</p>
+              </td>
+              <td><p class="predzadnja-kolona">{{ result.user_id|default:"None" }}</p></td>
+              <td>{{ result.rating|floatformat:2|default:"None"  }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+
+
+
+
+
+
+
+{% if table_results %}
+
+
+     {% endif %}
+
+      {% if not table_results and not results_count %}
+      <div class="my-alert my-alert-danger">
+        <i class="my-icon my-icon-block-helper"></i>
+        Your search term doesn't show any results, please use different keyword.
+        <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+{% elif api_user.balance == 0 and not table_results %}
+<div class="my-alert my-alert-danger">
+    <i class="my-icon my-icon-block-helper"></i>
+   <strong>You have reached your daily search limit.</strong>&nbsp; It will  reset at 00.00 GMT time.
+  &nbsp; <a href="https://teleteg.com/signup/"> Register to receive additional free search credits. </a>
+    <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+

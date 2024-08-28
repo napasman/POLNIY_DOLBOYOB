@@ -1,0 +1,6 @@
+/* static/css/ckeditor_custom.css */
+
+img {
+    max-width: 100%; /* Ensure images don't exceed their container width */
+    width: 100%;     /* Set the default width for images */
+}

@@ -1,0 +1,482 @@
+{% load static %}
+{% if table == 'channels' %}
+<style>
+  .bg-success-soft {
+    background-color: rgba(0, 255, 0, 0.3);
+    /* Lighter green color with opacity */
+    display: inline-block;
+    width: 20px;
+    /* Adjust the width and height to achieve the desired circle size */
+    height: 20px;
+    border-radius: 50%;
+    /* Ensure the element is rendered as a circle */
+  }
+
+  .bg-danger-soft {
+    background-color: rgba(255, 0, 0, 0.3);
+    /* Lighter red color with opacity */
+    display: inline-block;
+    width: 20px;
+    /* Adjust the width and height to achieve the desired circle size */
+    height: 20px;
+    border-radius: 50%;
+    /* Ensure the element is rendered as a circle */
+  }
+
+  .truncate-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+    /* Adjust the max-width to your desired length */
+  }
+
+  .my-alert {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+  }
+
+  .my-alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+
+  .my-icon {
+    margin-right: 0.5rem;
+  }
+
+  .my-icon-block-helper {
+    /* Add your custom icon styles here */
+  }
+
+  .my-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background-color: transparent;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: inherit;
+  }
+
+  .text-google-font {
+    font-weight: bold;
+  }
+</style>
+
+
+<div class="container overflow-auto">
+  {% if api_user.status == 'paid' or api_user.status == 'referral' %}
+  <span class="placeholder col-12 placeholder-xs"></span>
+ <!-- <p><span class="text-google-font">{{results_count}} results found. </span></p> -->
+    {% else %}
+    <span class="placeholder col-12 placeholder-xs"></span>
+    <p><span class="text-google-font">{{results_count}} results found. </span> On free plan you can see only 10 top
+      results. To see the rest of the results <span class="text-google-font"> <a
+          href="https://teleteg.com/checkout/">buy more credits</a></span></p>
+      {% endif %}
+      <div class="table-container">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col"><strong>#</strong></th>
+            <th scope="col"><strong>Link</strong></th>
+            <th scope="col"><strong>Title</strong></th>
+            <th scope="col"><strong>Description</strong></th>
+            <th scope="col"><strong>Memb</strong></th>
+            <th scope="col"><strong>Rating</strong></th>
+            <th scope="col"><strong>Online</strong></th>
+            <th scope="col"><strong>Created</strong></th>
+            <th scope="col">
+              <strong>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send messages">MS</span>
+              </strong>
+            </th>
+            <th scope="col">
+              <strong>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send media messages">MMS</span>
+              </strong>
+            </th>
+            <th scope="col">
+              <strong>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send polls">PL</span>
+              </strong>
+            </th>
+            <th scope="col">
+              <strong>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="can invite users ">IN</span>
+              </strong>
+            </th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for  ad_link in ad_links %}
+          <tr>
+            <td><a href="https://teleteg.com/pricing#advertise" >
+              <p style="text-decoration: underline; font-weight:bold; " class="truncate-text">AD</p>
+            </a></td>
+            <td>
+              <a href="{{ ad_link.link }}" target="_blank">
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-title="{{ ad_link.title }}">{{ ad_link.title }}</p>
+              </a>
+            </td>
+            <td>
+              <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-title="{{ ad_link.title }}">{{ ad_link.title }}</p>
+              </a>
+            </td>
+            <td>
+              {% if ad_link.description %}
+              <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-title="{{ ad_link.description }}">{{ ad_link.description }}</p>
+              {% else %}
+              <p class="truncate-text">None</p>
+              {% endif %}
+            </td>
+
+            <td>{{ ad_link.members }}</td>
+          </tr>
+          {% endfor %}
+
+          {% for  result in table_results %}
+          <tr>
+            <td>{{ forloop.counter}} </td>
+            <td>
+              <a href="https://t.me/{{ result.username }}" target="_blank">
+                <p class="truncate-text">{{ result.username }}</p>
+              </a>
+            </td>
+            <td>
+              <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-title="{{ result.title }}">{{ result.title }}</p>
+            </td>
+            <td>
+              {% if result.description %}
+              <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                data-bs-title="{{ result.description }}">{{ result.description }}</p>
+              {% else %}
+              <p class="truncate-text">None</p>
+              {% endif %}
+            </td>
+
+            <td>{{ result.members_count }}</td>
+            <td>{{ result.rating }}</td>
+            <td>{{ result.online|default:"None" }}</td>
+            <td>{{ result.creation_date|default:"None" }}</td>
+            <td>
+              {% if result.can_send_messages|lower == 'true' %}
+              <span class="badge rounded-pill bg-success-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% else %}
+              <span class="badge rounded-pill bg-danger-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% endif %}
+            </td>
+            <td>
+              {% if result.can_send_media_messages|lower == 'true' %}
+              <span class="badge rounded-pill bg-success-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% else %}
+              <span class="badge rounded-pill bg-danger-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% endif %}
+            </td>
+            <td>
+              {% if result.can_send_polls|lower == 'true' %}
+              <span class="badge rounded-pill bg-success-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% else %}
+              <span class="badge rounded-pill bg-danger-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% endif %}
+            </td>
+            <td>
+              {% if result.can_invite_users|lower == 'true'%}
+              <span class="badge rounded-pill bg-success-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% else %}
+              <span class="badge rounded-pill bg-danger-soft">
+                <p class="text-hide"></p>
+              </span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+    {% endif %}
+
+
+    {% if table == 'users' %}
+    <style>
+      .bg-success-soft {
+        background-color: rgba(0, 255, 0, 0.3);
+        /* Lighter green color with opacity */
+        display: inline-block;
+        width: 20px;
+        /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%;
+        /* Ensure the element is rendered as a circle */
+      }
+
+      .bg-danger-soft {
+        background-color: rgba(255, 0, 0, 0.3);
+        /* Lighter red color with opacity */
+        display: inline-block;
+        width: 20px;
+        /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%;
+        /* Ensure the element is rendered as a circle */
+      }
+
+      .truncate-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px;
+        /* Adjust the max-width to your desired length */
+      }
+
+      .my-alert {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+      }
+
+      .my-alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+
+      .my-icon {
+        margin-right: 0.5rem;
+      }
+
+      .my-icon-block-helper {
+        /* Add your custom icon styles here */
+      }
+
+      .my-close-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.75rem 1.25rem;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: inherit;
+      }
+
+      .text-google-font {
+        font-weight: bold;
+      }
+
+      td:first-child,
+      th:first-child {
+        padding-left: 10px;
+        /* Adjust the left padding to move the content more to the left */
+      }
+
+      .hide-column {
+        display: none;
+        /* Hide the columns with this class */
+      }
+
+      .table-container {
+        width: 50%;
+        /* Adjust the width as desired */
+        margin: 0;
+        /* Center the container horizontally */
+      }
+      .customplaceholder{
+        width:56%;
+      }
+    </style>
+    {% if api_user.status == 'paid' or api_user.status == 'referral' %}
+    <span class="placeholder col-7 placeholder-xs customplaceholder"></span>
+    <!-- <p><span class="text-google-font">{{results_count}} results found. </span></p> -->
+    <div class="table-container">
+      {% else %}
+      <span class="placeholder col-7 placeholder-xs"></span>
+      <p><span class="text-google-font">{{results_count}} results found. </span> On free plan you can see only 10 top
+        results. To see the rest of the results <span class="text-google-font"> <a
+            href="https://teleteg.com/checkout/">buy more credits</a></span></p>
+      <div class="table-container">
+        {% endif %}
+
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col"><strong>#</strong></th>
+              <th scope="col"><strong>Username</strong></th>
+              <th scope="col"><strong>First name</strong></th>
+              <th scope="col"><strong>Last name</strong></th>
+              <th scope="col"><strong>User ID</strong></th>
+              <th scope="col"><strong>Rating</strong></th>
+
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for ad_link in ad_links %}
+            <tr>
+              <td><a href="https://teleteg.com/pricing#advertise" >
+                <p style="text-decoration: underline; font-weight:bold; "  class="truncate-text">AD</p>
+              </a></td>
+              <td>
+                <a href="{{ ad_link.link }}" target="_blank">
+                  <p class="truncate-text">{{ ad_link.title }}</p>
+                </a>
+              </td>
+              <td>
+                <p class="truncate-text">{{ ad_link.title }}</p>
+                </a>
+              </td>
+              <td>
+                {% if ad_link.description %}
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ ad_link.description }}">{{ ad_link.description }}</p>
+                {% else %}
+                <p class="truncate-text">None</p>
+                {% endif %}
+              </td>
+
+              <td>{{ ad_link.members }}</td>
+            </tr>
+            {% endfor %}
+            {% for result in table_results %}
+            <tr>
+              <td>{{ forloop.counter}} </td>
+              <td>
+                <a href="https://t.me/{{ result.username }}" target="_blank">
+                  <p class="truncate-text">{{ result.username }}</p>
+                </a>
+              </td>
+              <td>
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ result.first_name }}">{{ result.first_name }}</p>
+              </td>
+              <td>
+                <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="{{ result.last_name }}">{{ result.last_name }}</p>
+              </td>
+              <td>{{ result.user_id|default:"None" }}</td>
+              <td>{{ result.rating|floatformat:2|default:"None"  }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {% if table_results %}
+      <div class="d-flex justify-content-end w-100 container p-3">
+        <button id="save-results-btn" class="btn btn-primary">Save Results</button>
+
+
+
+      </div>
+      {% endif %}
+
+      {% if not table_results and not results_count %}
+      <div class="my-alert my-alert-danger">
+        <i class="my-icon my-icon-block-helper"></i>
+        Your search term doesn't show any results, please use different keyword.
+        <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% elif api_user.balance == 0 and not table_results and not api_user.status == 'paid' and not api_user.status == 'referral' %}
+      <div class="my-alert my-alert-danger">
+        <i class="my-icon my-icon-block-helper"></i>
+        <strong>You have reached your daily search limit.</strong> It will reset at 00.00 GMT time.
+        <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% elif api_user.balance == 0 and api_user.status == 'paid' and not table_results %}
+      <div class="my-alert my-alert-danger">
+        <i class="my-icon my-icon-block-helper"></i>
+        You have used all your credits. <a href="{% url 'posts:checkout' %}">&nbsp; Buy more credits</a>
+        <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% elif api_user.balance == 0 and api_user.status == 'referral' and not table_results %}
+      <div class="my-alert my-alert-danger">
+        <i class="my-icon my-icon-block-helper"></i>
+        You have used all your credits. <a href="{% url 'posts:checkout' %}">&nbsp; Buy more credits</a>
+        <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endif %}
+
+
+
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+      <script>
+        $(document).ready(function () {
+          $('#save-results-btn').click(function () {
+            // Replace 'None' with null in the table_results data
+            var tableResults = {{ table_results | safe }};
+            var processedResults = JSON.stringify(tableResults, function (key, value) {
+              return value === 'None' ? null : value;
+            });
+            console.log(processedResults); // Log the processedResults data
+      
+            $.ajax({
+              url: '/download/{{ filter }}/', // Replace with the URL of your Django view or function
+              type: 'POST',
+              data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}', // Ensure you have the CSRF token available in your template
+                results: processedResults, // Pass the processedResults as the data
+              },
+              success: function (response) {
+                console.log('Results saved successfully');
+                window.location.href = "{% url 'file_manager' %}";
+              },
+              error: function (xhr, status, error) {
+                console.error('Failed to save results:', error);
+              }
+            });
+          });
+        });
+      </script>
+      

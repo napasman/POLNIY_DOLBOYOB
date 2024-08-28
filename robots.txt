@@ -1,0 +1,22 @@
+# Allow crawling and indexing for specific pages
+User-agent: *
+
+
+# Disallow crawling and indexing for specific pages
+Disallow: /users/
+Disallow: /referral-program/
+Disallow: /checkout/
+Disallow: /logout
+Disallow: /csv/
+Disallow: /signup/
+Disallow: /login/
+Disallow: /search-results/
+
+# Disallow crawling and indexing for pages with parameters lik e checkout
+Disallow: /checkout/
+
+# Disallow crawling and indexing for specific pages and their variations
+Disallow: /checkout/?price=
+Disallow: /checkout/?records=
+
+Disallow: /skote/

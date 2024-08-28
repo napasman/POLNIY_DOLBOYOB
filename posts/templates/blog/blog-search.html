@@ -1,0 +1,226 @@
+{% extends 'blog/search-base.html' %}
+{% load static %}
+{% block contents %}
+
+{% block extra_css %}
+<!-- Responsive Table css -->
+<link href="{% static 'libs/admin-resources/rwd-table/rwd-table.min.css' %}" rel="stylesheet" type="text/css" />
+<!-- ION Slider -->
+
+
+{% endblock %}
+
+
+<!-- SEARCH -->  
+
+<div class="container">
+{% include "authentication/searchBar.html" %}
+
+
+
+</div>
+<section>
+  <div class="container overflow-auto">
+    {% include "blog/table.html" %}
+    </div>
+</section>
+
+<!-- ARTICLES -->
+<section>
+  <div class="container">
+    <div class="row">
+      {% for post in allposts %}
+      <!-- latest posts -->
+      <div class="col-12 col-md-6 col-lg-4 d-flex">
+        <!-- Card -->
+        <div class="card mb-6 mb-lg-0 shadow-light-lg lift lift-lg">
+          <!-- Image -->
+          <a class="card-img-top" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Image -->
+            <img
+              src="{{post.heading_image.url}}"
+              alt="..."
+              class="card-img-top"
+            />
+
+            <!-- Shape -->
+            <div class="position-relative">
+              <div class="shape shape-bottom shape-fluid-x text-white">
+                <svg
+                  viewBox="0 0 2880 480"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Body -->
+          <a class="card-body" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Heading -->
+            <h3>{{post.title}}</h3>
+
+            <!-- Text -->
+            <p class="mb-0 text-muted">{{post.short_description}}</p>
+          </a>
+
+          <!-- Meta -->
+          <a class="card-meta mt-auto" href="#!">
+            <!-- Divider -->
+            <hr class="card-meta-divider" />
+
+            <!-- Avatar -->
+            <div class="avatar avatar-sm me-2">
+              <img
+                src="{{post.author.get_photo_url}}"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </div>
+
+            <!-- Author -->
+            <h6 class="text-uppercase text-muted me-2 mb-0">
+              {{post.author.name}}
+            </h6>
+
+            <!-- Date -->
+            <p class="h6 text-uppercase text-muted mb-0 ms-auto">
+              <time datetime="2019-05-02">{{post.publish_on|date:'M d'}}</time>
+            </p>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+<!-- <div class="row">
+  <div class="col-12 d-flex justify-content-center">
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-left"></i></a></li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#"><i class="mdi mdi-chevron-right"></i></a></li>
+      </ul>
+  </nav>
+
+    </div>
+  
+  </div> -->
+
+{% block extra_javascript %}
+        <!-- Responsive Table js -->
+        <script src="{% static 'libs/admin-resources/rwd-table/rwd-table.min.js' %}"></script>
+
+        <!-- Init js -->
+        <script src="{% static 'js/pages/table-responsive.init.js' %}"></script>
+        
+                      <!-- Ion Range Slider-->
+       <script src="{% static 'libs/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+       
+       <script src="{% static 'js/pages/form-advanced.init.js'%}"></script>
+
+
+       <script>
+        const data = "{{table_results}}"
+        function download_file(filter){
+          $.ajax("{% url 'posts:download' filter %}", {
+         type: 'POST',  // http method
+         data: {results:"{{table_results | safe}}"},
+         headers: { 'X-CSRFToken': '{{ csrf_token }}'}, 
+   
+        success: function (data, status, xhr) {
+          window.location.href ="{% url 'file_manager' %}"
+    },
+    error: function (jqXhr, textStatus, errorMessage) {
+      window.location.href ="{% url 'file_manager' %}"
+    }
+});
+        }
+       </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+ <script>
+    
+
+$(document).ready(function () {
+    
+
+   $("#search-limit-range").ionRangeSlider({ skin: "square", type:"double",min: 10, max: "{{api_user.balance}}", from: 100, to_fixed:true,grid: !0 })
+    $("#members-count-range").ionRangeSlider({ skin: "square",type:"double", to_fixed:true, min: 0, max: 5000 , from: 0 ,grid: !0})
+    $("#rating-count-range").ionRangeSlider({ skin: "square", type: "double", min: 0, max: 2,step: 0.1, from: 0, grid: true });
+    $("#online-count-range").ionRangeSlider({
+        skin: "square",
+        type: "double",
+        min: 0,
+        max: 100,
+        step: 1,
+        from: 0,
+        grid: true,
+        postfix: " %"
+    });
+    
+        /* $("#rating-by-messages").ionRangeSlider({ skin: "square", type: "double", to_fixed: true, min: 0, max: 2,step: 0.1, from: 0, grid: true }); */ 
+        var currentDate = moment();
+    var firstDayOfCurrentMonth = moment(currentDate).startOf('month');
+    
+    $("#creation-count-range").ionRangeSlider({
+        skin: "square",
+        type: "double",
+        min: moment('1982-01-01').startOf('month').valueOf(),
+        max: firstDayOfCurrentMonth.endOf('month').valueOf(),
+        from: moment('1982-01-01').startOf('month').valueOf(),
+        to: firstDayOfCurrentMonth.valueOf(),
+        step: moment.duration(1, 'months').asMilliseconds(), // Set step to one month
+        grid: true,
+        onFinish: function (data) {
+            var updatedValues = {
+                from: moment(data.from).startOf('month').valueOf(),
+                to: moment(data.to).startOf('month').valueOf()
+            };
+            $(this).data("ionRangeSlider").update(updatedValues);
+        },
+        prettify: function (num) {
+            var createdDate = moment(num);
+            var monthsOld = firstDayOfCurrentMonth.diff(createdDate, 'months');
+            return monthsOld + " mths";
+        },
+        onFinish: function (data) {
+            console.log("Selected range:", moment(data.from).format("MMM DD, YYYY"), "to", moment(data.to).format("MMM DD, YYYY"));
+        }
+    });
+
+
+
+ /*
+    $("#rating-last-date").ionRangeSlider({
+        skin: "square",
+        type: "double",
+        to_fixed: true,
+        min: moment('2023-01-01').valueOf(), // Replace with your minimum date
+        max: moment('2023-12-31').valueOf(), // Replace with your maximum date
+        from: moment('2023-01-01').valueOf(), // Replace with your default start date
+        to: moment('2023-12-31').valueOf(),   // Replace with your default end date
+        grid: true,
+        prettify: function (num) {
+            return moment(num).format("YYYY-MM-DD"); // Format the displayed date
+        }
+    });
+    */ 
+})
+ </script>
+{% endblock %}
+
+{% endblock %}

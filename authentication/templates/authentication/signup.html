@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% load static %}
+{% block head %}
+    <meta name="robots" content="noindex, nofollow">
+{% endblock head %}
+{% block content %}
+<style>
+  .py-md-11 {
+    padding-top: 0rem !important; /* Added !important to override existing styles */
+  }
+</style>
+
+<section>
+  <div class="container d-flex flex-column">
+    <div class="row align-items-top justify-content-center gx-0 min-vh-100">
+      <div class="col-12 col-md-5 col-lg-4 py-8 py-md-11">
+        <!-- Heading -->
+        <h1 class="mb-0 fw-bold text-center">Sign up Free</h1>
+        <!-- Form -->
+        <form class="mb-6" method="POST">
+          {%csrf_token %}
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="email"> Email Address </label>
+            {{form.email}}
+            <div class="text-danger mt-3">{{form.errors.email.as_text}}</div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-5">
+            <label class="form-label" for="password"> Password </label>
+            {{form.password1}}
+          </div>
+          
+          
+          <!-- Password
+          <div class="form-group mb-5">
+            <label class="form-label" for="password"> Confirm Password </label>
+            {{form.password2}}
+            <div class="text-danger mt-3">
+              {{form.errors.password2.as_text}}
+            </div>
+          </div>
+           -->
+          <!-- Submit -->
+          <button class="btn w-100 btn-primary" type="submit">Sign up Free</button>
+        </form>
+        <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="Teleteglogbot" data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+        <script>
+        function onTelegramAuth(user) {
+            console.log("Telegram user data received:", user);
+            // Send the user data to the Django server
+            fetch('/handle-telegram-auth/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => {
+                console.log("Server response status:", response.status);
+                if (response.headers.get('content-type').includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+                if (data.status === 'success') {
+                    window.location.href = '/';  // Redirect to the home page or another page
+                } else {
+                    alert('Login failed: ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+         </script>
+
+        <!-- Text -->
+        <p class="mb-0 fs-sm text-center text-muted">
+          Already have an account?
+          <a href="{% url 'posts:signin' %}">Log in</a>.
+        </p>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  
+  
+  <!-- / .container -->
+</section>
+{% endblock content %}

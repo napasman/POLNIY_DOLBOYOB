@@ -1,0 +1,76 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+
+<style>
+    /* Apply CSS to make the text elements behave like inline elements */
+    .text-reset.notification-item {
+        display: inline;
+    }
+</style>
+
+{% block contents %}
+<div class="row">
+    <div class="col-lg-7">
+        <div class="">
+            <h4 class="class="mb-sm-0 font-size-18">NOTIFICATION LIST</h1>
+            <div class="table-responsive">
+                <table class="table project-list-table table-nowrap align-middle table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col">Notifications</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Sender</th>
+                            {% if user.is_superuser %}
+                            <th scope="col">Delete</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for notification, read_status in notifications_with_status reversed %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                    <h5 class="text-truncate font-size-14 mb-0">
+                                       {{ notification.title }}
+                                    </h5>
+                                    <p class="text-muted mb-0">{{ notification.message|truncatechars_html:20|safe }}</p>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                    {{ notification.timestamp }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                    {% if read_status %}
+                                    <span class="badge bg-success">Read</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">New</span>
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                    {{ notification.sender_role }}, level {{ notification.sender_level }}
+                                </a>
+                            </td>
+                            <td>
+    {% if user.is_superuser %}
+        <a href="{% url 'delete_notification' notification.id %}" class="text-reset notification-item">
+            <i class="bx bx-trash"></i>
+        </a>
+    {% endif %}
+</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+{% endblock %}

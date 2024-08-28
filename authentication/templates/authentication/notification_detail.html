@@ -1,0 +1,39 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+
+{% block contents %}
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <!-- Add a "View All" button at the top right -->
+                        <a href="{% url 'view_all_notifications' %}" class="small" key="t-view-all" style="position: absolute; top: 10px; right: 10px;">View All</a>
+
+                        <div class="flex-grow-1 overflow-hidden">
+                            <h5 class="text-truncate font-size-15">{{ notification.title }}</h5>
+                            <h5 class="font-size-15 mt-4">Notification Details:</h5>
+                            <p class="text-muted">{{ notification.message|safe }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row task-dates">
+                        <div class="col-sm-4 col-6">
+                            <div class="mt-4">
+                                <h5 class="font-size-14"><i class="bx bx-calendar me-1 text-primary"></i>Date</h5>
+                                <p class="text-muted mb-0">{{ notification.timestamp }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <script src="{% static 'js/pages/project-overview.init.js' %}"></script>
+{% endblock %}

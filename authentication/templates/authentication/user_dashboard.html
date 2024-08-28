@@ -1,0 +1,730 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+{% block contents %}
+{% if messages %}
+        <div class="alert alert-success">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% block extra_css %}
+<!-- ION Slider -->
+
+
+{% endblock %}
+                        <!-- <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="d-flex">
+                                                    <div class="flex-shrink-0 me-3">
+                                                        <img src="{% static 'images/users/avatar-1.jpg'%}" alt="" class="avatar-md rounded-circle img-thumbnail">
+                                                    </div>
+                                                    <div class="flex-grow-1 align-self-center">
+                                                        <div class="text-muted">
+                                                            <p class="mb-2">Welcome to Your Dashboard</p>
+                                                            <h5 class="mb-1">{{user.name}}</h5>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-4 align-self-center">
+                                                <div class="text-lg-center mt-4 mt-lg-0">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted text-truncate mb-2">Balance</p>
+                                                                <h5 class="mb-0">100</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div>
+                                                                <p class="text-muted text-truncate mb-2">Total Results</p>
+                                                                <h5 class="mb-0">15,000</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-4 d-none d-lg-block">
+                                                <div class="clearfix mt-4 mt-lg-0">
+                                                    <div class="dropdown float-end">
+                                                        <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="bx bxs-cart align-middle me-1"></i> Buy Points
+                                                        </button>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                          -->
+
+                        {% include "authentication/searchBar.html" %}
+                        <!--
+                     <div class="row"> 
+                            <div class="col-xl-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="clearfix">
+                                            <div class="float-end">
+                                                <div class="input-group input-group-sm">
+                                                    <select class="form-select form-select-sm">
+                                                        <option value="AU" selected>Aug</option>
+                                                        <option value="DE">Dec</option>
+                                                        <option value="NO">Nov</option>
+                                                        <option value="OC">Oct</option>
+                                                    </select>
+                                                    <label class="input-group-text">Month</label>
+                                                </div>
+                                            </div>
+                                            <h4 class="card-title mb-4">Target Groups</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="text-muted">
+                                                    <div class="mb-4">
+                                                        <p>This month collected</p>
+                                                        <h4>244,165</h4>
+                                                        <div><span class="badge badge-soft-success font-size-12 me-1"> + 37.5% </span> From previous period</div>
+                                                    </div>
+
+                                                    <div>
+                                                        <a href="javascript: void(0);" class="btn btn-primary waves-effect waves-light btn-sm">View Details <i class="mdi mdi-chevron-right ms-1"></i></a>
+                                                    </div>
+                                                    
+                                                    <div class="mt-4">
+                                                        <p class="mb-2">Last month collected</p>
+                                                        <h5>177,547</h5>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-8">
+                                                <div id="line-chart" class="apex-charts" dir="ltr"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4">Database Stats</h4>
+
+                                        <div>
+                                            <div id="donut-chart" class="apex-charts"></div>
+                                        </div>
+
+                                        <div class="text-center text-muted">
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="mt-4">
+                                                        <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-primary me-1"></i>Members</p>
+                                                        <h5>175,820,817</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="mt-4">
+                                                        <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-success me-1"></i>Channels</p>
+                                                        <h5>2,967,357</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="mt-4">
+                                                        <p class="mb-2 text-truncate"><i class="mdi mdi-circle text-danger me-1"></i>Groups</p>
+                                                        <h5>1,718,372</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="clearfix">
+                                            <div class="float-end">
+                                                <div class="input-group input-group-sm">
+                                                    <select class="form-select form-select-sm">
+                                                        <option value="JA" selected>Aug</option>
+                                                        <option value="SEP">Sep</option>
+                                                        <option value="OCT">Oct</option>
+                                                        <option value="NOV">Nov</option>
+                                                    </select>
+                                                    <label class="input-group-text">Month</label>
+                                                </div>
+                                            </div>
+                                            <h4 class="card-title mb-4">Top Selling Product</h4>
+                                        </div>
+
+                                        <div class="text-muted text-center">
+                                            <p class="mb-2">Target Groups</p>
+                                            <h4>138,387</h4>
+                                            <p class="mt-4 mb-0"><span class="badge badge-soft-success font-size-11 me-2"> 21.6% <i class="mdi mdi-arrow-up"></i> </span> From previous period</p>
+                                        </div>
+
+                                        <div class="table-responsive mt-4">
+                                            <table class="table align-middle mb-0">
+                                                <tbody>
+                                                    
+                                                    <tr>
+                                                        <td>
+                                                            <h5 class="font-size-14 mb-1">Target Groups</h5>
+                                                            <p class="text-muted mb-0">Best for your marketing campaign</p>
+                                                        </td>
+
+                                                        <td>
+                                                            <div id="radialchart-2" class="apex-charts"></div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-muted mb-1">Sales</p>
+                                                            <h5 class="mb-0">72%</h5>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td>
+                                                            <h5 class="font-size-14 mb-1">Target Channels</h5>
+                                                            <p class="text-muted mb-0">Spread the word trough influencers</p>
+                                                        </td>
+
+                                                        <td>
+                                                            <div id="radialchart-1" class="apex-charts"></div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-muted mb-1">Sales</p>
+                                                            <h5 class="mb-0">7%</h5>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                     <tr>
+                                                        <td>
+                                                            <h5 class="font-size-14 mb-1">Target Members</h5>
+                                                            <p class="text-muted mb-0">For messaging and invite</p>
+                                                        </td>
+
+                                                        <td>
+                                                            <div id="radialchart-3" class="apex-charts"></div>
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-muted mb-1">Sales</p>
+                                                            <h5 class="mb-0">21%</h5>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap align-items-start">
+                                            <div class="me-2">
+                                                <h5 class="card-title mb-3">Top Searched Niches</h5>
+                                            </div>
+                                            <div class="dropdown ms-auto">
+                                                <a class="text-muted font-size-16" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                                    <i class="mdi mdi-dots-horizontal"></i>
+                                                </a>
+                                              
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="#">Separated link</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-1">Today Searched</p>
+                                                    <h5>11,524</h5>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-6">
+                                                <div class="mt-3">
+                                                    <p class="text-muted mb-1">This Month</p>
+                                                    <h5>327,356 <span class="text-success font-size-13">11.2% <i class="mdi mdi-arrow-up ms-1"></i></span></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <div class="py-2">
+                                                        <h5 class="font-size-14">Crypto <span class="float-end">166,937</span></h5>
+                                                        <div class="progress animated-progess progress-sm">
+                                                            <div class="progress-bar" role="progressbar" style="width: 51%" aria-valuenow="51" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </li>    
+                                                <li class="list-group-item">
+                                                    <div class="py-2">
+                                                        <h5 class="font-size-14">Gambling <span class="float-end">75,363</span></h5>
+                                                        <div class="progress animated-progess progress-sm">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 23%" aria-valuenow="23" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="py-2">
+                                                        <h5 class="font-size-14">Adult <span class="float-end">39,282</span></h5>
+                                                        <div class="progress animated-progess progress-sm">
+                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 12%" aria-valuenow="19" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </li>   
+                                                <li class="list-group-item">
+                                                    <div class="py-2">
+                                                        <h5 class="font-size-14">Other <span class="float-end">45,774</span></h5>
+                                                        <div class="progress animated-progess progress-sm">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 14%" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                </li>  
+                                            </ul>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4">
+                                <div class="card">
+                                    <div class="card-body border-bottom">
+                                        <div class="row">
+                                            <div class="col-md-4 col-9">
+                                                <h5 class="font-size-15 mb-1">Support</h5>
+                                                <p class="text-muted mb-0"><i class="mdi mdi-circle text-success align-middle me-1"></i> Active now</p>
+                                            </div>
+                                            <div class="col-md-8 col-3">
+                                                <ul class="list-inline user-chat-nav text-end mb-0">
+                                                    <li class="list-inline-item d-none d-sm-inline-block">
+                                                        <div class="dropdown">
+                                                            <button class="btn nav-btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="bx bx-search-alt-2"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end py-0 dropdown-menu-md">
+                                                                <form class="p-3">
+                                                                    <div class="form-group m-0">
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                                                                            
+                                                                            <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="list-inline-item  d-none d-sm-inline-block">
+                                                        <div class="dropdown">
+                                                            <button class="btn nav-btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="bx bx-cog"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a class="dropdown-item" href="#">View Profile</a>
+                                                                <a class="dropdown-item" href="#">Clear chat</a>
+                                                                <a class="dropdown-item" href="#">Muted</a>
+                                                                <a class="dropdown-item" href="#">Delete</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+    
+                                                    <li class="list-inline-item">
+                                                        <div class="dropdown">
+                                                            <button class="btn nav-btn" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <i class="bx bx-dots-horizontal-rounded"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-end">
+                                                                <a class="dropdown-item" href="#">Action</a>
+                                                                <a class="dropdown-item" href="#">Another action</a>
+                                                                <a class="dropdown-item" href="#">Something else</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body pb-0">
+                                        <div>
+                                            <div class="chat-conversation">
+                                                <ul class="list-unstyled" data-simplebar style="max-height: 260px;">
+                                                    <li> 
+                                                        <div class="chat-day-title">
+                                                            <span class="title">Today</span>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Customer</div>
+                                                                <p>
+                                                                    Hello. Can you help me to find groups?
+                                                                </p>
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:36</p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+        
+                                                    <li class="right">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Teleteg Support</div>
+                                                                <p>
+                                                                    Good day. What kind of groups you looking for and how many?
+                                                                </p>
+        
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:38</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+        
+                                                    <li>
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Customer</div>
+                                                                <p>
+                                                                    I need 500 Korean crypto groups.
+                                                                </p>
+                                                                
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:41</p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+        
+                                                    <li class="last-chat">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Customer</div>
+                                                                <p>Active groups related to blockchain in Korea</p>
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:42</p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+        
+                                                    <li class="right">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Teleteg Support</div>
+                                                                <p>
+                                                                    Sure, we can find it for you. We charge $0.15 per target group found. The total for your order will be $75
+                                                                </p>
+        
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:43</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    
+                                                    <li class="last-chat">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Customer</div>
+                                                                <p>OK</p>
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:43</p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+                                                    
+                                                    <li class="right">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Teleteg Support</div>
+                                                                <p>
+                                                                    What is you preferred payment system? We accept PayPal and USDT. 
+                                                                </p>
+        
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:44</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    
+                                                    <li class="last-chat">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Customer</div>
+                                                                <p>USDT please</p>
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:45</p>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </li>
+                                                    
+                                                    <li class="right">
+                                                        <div class="conversation-list">
+                                                            <div class="dropdown">
+        
+                                                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                                  </a>
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="#">Copy</a>
+                                                                    <a class="dropdown-item" href="#">Save</a>
+                                                                    <a class="dropdown-item" href="#">Forward</a>
+                                                                    <a class="dropdown-item" href="#">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ctext-wrap">
+                                                                <div class="conversation-name">Teleteg Support</div>
+                                                                <p>
+                                                                    Sure, I will send you TRC20 wallet in a second 
+                                                                </p>
+        
+                                                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 9:45</p>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 chat-input-section">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control rounded chat-input" placeholder="Enter Message...">
+                                                    <div class="chat-input-links">
+                                                        <ul class="list-inline mb-0">
+                                                            <li class="list-inline-item"><a href="javascript: void(0);"><i class="mdi mdi-emoticon-happy-outline"></i></a></li>
+                                                            <li class="list-inline-item"><a href="javascript: void(0);"><i class="mdi mdi-file-image-outline"></i></a></li>
+                                                            <li class="list-inline-item"><a href="javascript: void(0);"><i class="mdi mdi-file-document-outline"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="https://t.me/teleteg_support"><button type="submit" class="btn btn-primary chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send"></i></button></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                      -->
+                    
+{% endblock %}
+
+{% block extra_javascript %}
+        <!-- apexcharts -->
+<script src="{% static 'libs/apexcharts/dist/apexcharts.min.js'%}"></script>        
+        <!-- Saas dashboard init -->
+<script src="{% static 'assets/js/dashboard.init.js'%}"></script>
+              <!-- Ion Range Slider-->
+<script src="{% static 'libs/ion-rangeslider/js/ion.rangeSlider.min.js' %}"></script>
+<!-- form advanced init -->
+<script src="{% static 'js/pages/form-advanced.init.js'%}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<!-- Range slider init js-->
+ <script>
+    
+
+$(document).ready(function () {
+    
+
+    $("#search-limit-range").ionRangeSlider({ skin: "square", type:"double",min: 10, max: "{{api_user.balance}}", from: 100, to_fixed:true,grid: !0 })
+    $("#members-count-range").ionRangeSlider({ skin: "square",type:"double", to_fixed:true, min: 0, max: 5000 , from: 0 ,grid: !0})
+    $("#rating-count-range").ionRangeSlider({ skin: "square", type: "double",  min: 0, max: 2,step: 0.1, from: 0, grid: true });
+    $("#online-count-range").ionRangeSlider({
+    skin: "square",
+    type: "double",
+    min: 0,
+    max: 100,
+    step: 1,
+    from: 0,
+    grid: true,
+    postfix: " %"
+});
+
+    /* $("#rating-by-messages").ionRangeSlider({ skin: "square", type: "double", to_fixed: true, min: 0, max: 2,step: 0.1, from: 0, grid: true }); */ 
+    var currentDate = moment();
+var firstDayOfCurrentMonth = moment(currentDate).startOf('month');
+
+$("#creation-count-range").ionRangeSlider({
+    skin: "square",
+    type: "double",
+    min: moment('1982-01-01').startOf('month').valueOf(),
+    max: firstDayOfCurrentMonth.endOf('month').valueOf(),
+    from: moment('1982-01-01').startOf('month').valueOf(),
+    to: firstDayOfCurrentMonth.valueOf(),
+    step: moment.duration(1, 'months').asMilliseconds(), // Set step to one month
+    grid: true,
+    onFinish: function (data) {
+        var updatedValues = {
+            from: moment(data.from).startOf('month').valueOf(),
+            to: moment(data.to).startOf('month').valueOf()
+        };
+        $(this).data("ionRangeSlider").update(updatedValues);
+    },
+    prettify: function (num) {
+        var createdDate = moment(num);
+        var monthsOld = firstDayOfCurrentMonth.diff(createdDate, 'months');
+        return monthsOld + " mths";
+    },
+    onFinish: function (data) {
+        console.log("Selected range:", moment(data.from).format("MMM DD, YYYY"), "to", moment(data.to).format("MMM DD, YYYY"));
+    }
+});
+
+
+
+
+
+
+
+    /*
+    $("#rating-last-date").ionRangeSlider({
+        skin: "square",
+        type: "double",
+        to_fixed: true,
+        min: moment('2023-01-01').valueOf(), // Replace with your minimum date
+        max: moment('2023-12-31').valueOf(), // Replace with your maximum date
+        from: moment('2023-01-01').valueOf(), // Replace with your default start date
+        to: moment('2023-12-31').valueOf(),   // Replace with your default end date
+        grid: true,
+        prettify: function (num) {
+            return moment(num).format("YYYY-MM-DD"); // Format the displayed date
+        }
+    });
+    */ 
+})
+ </script>
+
+{% endblock %}

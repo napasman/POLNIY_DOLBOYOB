@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% if selected_download_names %}
+    <p>
+        {% for download_name in selected_download_names %}
+            {{ download_name }}<br>
+        {% endfor %}
+    </p>
+{% endif %}
+
+{% if widget.can_add_related %}
+    <a class="related-widget-wrapper-link add-related" id="add_{{ widget.name }}" href="{{ widget.url_params.url }}{% if widget.url_params.params %}?{{ widget.url_params.params }}{% endif %}" title="{{ widget.add_related_label }}">
+        <img src="/static/admin/img/icon-addlink.svg" alt="{{ widget.add_related_label }}">
+    </a>
+{% endif %}

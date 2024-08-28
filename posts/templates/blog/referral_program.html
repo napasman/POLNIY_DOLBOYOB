@@ -1,0 +1,252 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+
+{% block contents %}
+<style>
+    .example-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px 10px 10px 0; /* Adjust the right margin to control the spacing */
+    }
+    .info-message {
+            display: none;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+        }
+</style>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2>REFERRAL PROGRAM</h2>
+                                        <p>
+                                            To get free credits, you can generate a referral link and place it on your blog, channel, or anywhere on the web. Each click on your link will earn you 1 credit that you can use to search for Telegram groups or any other data in our search tool.
+                                        </p>
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4">
+                                                <div class="search-box me-2 mb-2 d-inline-block">
+                                                    <div class="position-relative">
+                                                        <input type="text" class="form-control" placeholder="Search...">
+                                                        <i class="bx bx-search-alt search-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="text-sm-end">
+                                                    <form method="post" action="{% url 'posts:create_campaign' %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2">
+                                                            <i class="mdi mdi-plus me-1"></i> Generate Link
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div><!-- end col -->
+                                        
+                                        </div>
+                                
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-nowrap table-check">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="width: 20px;" class="align-middle">
+                                                            <div class="form-check font-size-16">
+                                                                <input class="form-check-input" type="checkbox" id="checkAll">
+                                                                <label class="form-check-label" for="checkAll"></label>
+                                                            </div>
+                                                        </th>
+                                                        <th class="align-middle" style="width: 3%;">Link ID</th>
+                                                        <th class="align-middle" style="width: 3%;">Date</th>
+                                                        <th class="align-middle" style="width: 3%;">Clicks</th>
+                                                        <th class="align-middle" style="width: 3%;">View Details</th>
+                                                        <th class="align-middle" style="width: 82%;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Inside the <tbody> tag -->
+                                                        {% for referral_link in referral_links %}
+                                                        <tr>
+                                                            <td>
+                                                                <div class="form-check font-size-16">
+                                                                    <input class="form-check-input" type="checkbox" id="check{{ referral_link.id }}">
+                                                                    <label class="form-check-label" for="check{{ referral_link.id }}"></label>
+                                                                </div>
+                                                            </td>
+                                                            <td class="align-middle">{{ referral_link.order_id }}</td>
+                                                            <td class="align-middle">{{ referral_link.date_generated }}</td>
+                                                            <td class="align-middle">{{ referral_link.clicks }}</td>
+                                                            <td class="align-middle">
+                                                                <a href="#" class="view-details-link" data-bs-toggle="modal" data-bs-target=".orderdetailsModal" data-referral-pattern="{{ referral_link.referral_pattern }}" data-link-code="{{ referral_link.link_code }}">
+                                                                    <button type="button" class="btn btn-primary btn-sm btn-rounded">
+                                                                        View Details
+                                                                    </button>
+                                                                </a>
+                                                                
+                                                            </td>
+                                                            <td class="align-middle">
+                                                                <a href="{% url 'posts:delete_referral' referral_link.id %}" class="text-danger">
+                                                                    <i class="mdi mdi-delete font-size-18"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+<!-- Modal -->
+<div class="modal fade orderdetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderdetailsModalLabel">Copy Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Code: <span class="text-primary referral-pattern"></span></p>
+                <p class="mb-4">
+                    Link: <span id="linkCodeSpan" class="text-primary link-code">{{ referral_link.link_code }}</span>
+                </p>
+                <p>Example that you can use on your website or channel:</p>
+                <!-- Version 1: HTML Tags -->
+                <div class="example-box">
+                    <p id="htmlVersion" style="display:none;">
+                        <a href="{{ referral_link.link_code }}">Teleteg.com</a>: Elevate your Telegram experience with the ultimate search engine.
+                        Effortlessly find groups, channels, admins, members, and more. Say hello to efficient searching, goodbye to endless scrolling.
+                    </p>
+
+                    <p id="htmlVersion2" class="href-link-code">
+                        &lt;p&gt;&lt;a href="{% block link_code %}{{ referral_link.link_code }}{% endblock %}" target="_blank" class="href-link-code"&gt;Teleteg.com&lt;/a&gt;: Elevate your Telegram experience with the ultimate search engine.
+                        Effortlessly find groups, channels, admins, members, and more. Say hello to efficient searching, goodbye to endless scrolling.&lt;/p&gt;
+                    </p>
+                    <button class="btn btn-primary copy-button" onclick="copyHtmlToClipboard()">Copy HTML</button>
+                </div>
+                <!-- Version 2: Plain Text -->
+                <div class="example-box">
+                    <p id="plainTextVersion">Teleteg.com: Elevate your Telegram experience with the ultimate search engine.Effortlessly find groups, channels, admins, members, and more. Say hello to efficient searching, goodbye to endless scrolling.</p>
+                    <button class="btn btn-primary copy-button" onclick="copyPlainTextToClipboard()">Copy Plain Text</button>
+                </div>
+
+                <div class="info-message" id="infoMessage">Copied to clipboard</div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                
+<script>
+$(document).ready(function() {
+    var isFirstClick = false;
+    $('.orderdetailsModal').on('show.bs.modal', function (event) {
+        // Get the referral_link object associated with the modal
+        var referralPattern = $(event.relatedTarget).data('referral-pattern');
+         var linkCode = $(event.relatedTarget).data('link-code');
+// Check if the linkCode starts with 'http://' and replace it with 'https://'
+if (linkCode.startsWith('http://')) {
+    linkCode = linkCode.replace('http://', 'https://');
+} else if (!linkCode.startsWith('https://')) {
+    // If the linkCode doesn't start with 'http://' or 'https://', prepend 'https://'
+    linkCode = 'https://' + linkCode;
+}
+
+        // Set the href attribute of the anchor tag within htmlVersion
+        var anchorTag = $('#htmlVersion a');
+        anchorTag.attr('href', linkCode);
+
+        // Update the HTML content of the #htmlVersion paragraph
+        $('#htmlVersion').html('<p><a href="' + linkCode + '">Teleteg.com</a>: Elevate your Telegram experience with the ultimate search engine. ' +
+            'Effortlessly find groups, channels, admins, members, and more. Say hello to efficient searching, goodbye to endless scrolling.</p>');
+
+        // Add a delay before calling the copyHtmlToClipboard function
+        setTimeout(function () {
+            isFirstClick = true;
+            copyHtmlToClipboard(linkCode, isFirstClick); // Pass the linkCode as an argument
+        }, 1000); // Delay in milliseconds (1 second in this example)
+    });
+
+    $('.view-details-link').on('click', function() {
+        var referralPattern = $(this).data('referral-pattern');
+         var linkCode = $(this).data('link-code');
+// Check if the linkCode starts with 'http://' and replace it with 'https://'
+if (linkCode.startsWith('http://')) {
+    linkCode = linkCode.replace('http://', 'https://');
+} else if (!linkCode.startsWith('https://')) {
+    // If the linkCode doesn't start with 'http://' or 'https://', prepend 'https://'
+    linkCode = 'https://' + linkCode;
+}
+
+
+        $('.modal-body .referral-pattern').text(referralPattern);
+        $('.modal-body .link-code').text(linkCode);
+        $('.modal-body .href-link-code').attr('href', linkCode);
+    });
+});
+
+
+
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const linkCodeSpan = document.getElementById('linkCodeSpan');
+        
+        linkCodeSpan.addEventListener('click', function () {
+            const linkURL = this.textContent; // Get the link URL from the text content of the span
+            window.open(linkURL, '_blank'); // Open the link in a new tab
+        });
+    });
+</script>
+
+    <!-- Include Clipboard.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+<script>
+    function copyHtmlToClipboard(isFirstClick) {
+        const htmlContent = document.getElementById('htmlVersion').innerHTML;
+        console.log(htmlContent)
+        const htmlVersion2 = document.getElementById('htmlVersion2');
+        document.getElementById('htmlVersion2').textContent = htmlContent;
+        copyToClipboard(htmlContent, isFirstClick);
+    }
+
+    function copyPlainTextToClipboard() {
+        const plainTextContent = document.getElementById('plainTextVersion').textContent;
+        copyToClipboard(plainTextContent);
+    }
+
+    async function copyToClipboard(text, isFirstClick) {
+        try {
+            await navigator.clipboard.writeText(text);
+            if(isFirstClick){
+            document.getElementById('infoMessage').style.display = 'none';
+            isFirstClick=false;
+            }
+            else{
+            isFirstClick=false;
+            document.getElementById('infoMessage').style.display = 'block';
+            setTimeout(function() {
+                document.getElementById('infoMessage').style.display = 'none';
+            }, 1000);
+         } // Hide the message after 2 seconds
+        } catch (err) {
+            console.error('Unable to copy to clipboard: ', err);
+        }
+    }
+</script>
+          
+{% endblock %}
+
+
+
+

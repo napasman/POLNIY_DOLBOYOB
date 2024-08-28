@@ -1,0 +1,240 @@
+{% load static %}
+{% block header%}
+
+<style>
+    .custom-margin {
+margin-left: 15px; /* Adjust the value as necessary */
+}
+
+ /* Responsive styling for small screens */
+    @media only screen and (max-width: 767px) {
+        .logo-small {
+            max-width: 400px; /* Make the small logo responsive on small screens */
+            height: 50px; /* Maintain the aspect ratio of the logo */
+            margin-top: -20px;
+        }
+
+        .navbar-brand-box a.logo {
+            padding: 10px 0; /* Add some padding to the logo container for better spacing on small screens */
+        }
+        
+        body[data-sidebar=dark] .navbar-brand-box {
+    background: white;
+    height: 50px;
+}
+
+    }
+</style>
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="{% url 'posts:index' %}" class="logo logo-dark">
+                    <span class="logo-sm">
+                         <img src="{% static 'assets/img/TeletegLogo.jpg' %}" class="logo-small" alt="..." />
+      
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{% static 'assets/img/LightLogo.png' %}" class="TeletegLogo dashboard-logo"
+                            style="width: 30px;" />
+                    </span>
+                </a>
+
+                <a href="{% url 'posts:index' %}" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="{% static 'assets/img/TeletegLogo.jpg' %}" class="logo-small" alt="..." />
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{% static 'assets/img/DarkLogo.png' %}" class="TeletegLogo dashboard-logo" />
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+
+
+        </div>
+     {%  if request.user.is_authenticated %}
+        <div class="d-flex">
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                    <i class="bx bx-fullscreen"></i>
+                </button>
+            </div>
+
+
+
+
+            <div class="navbar-expand-lg navbar-light d-none d-lg-block  dropdown">
+                <ul class="navbar-nav d-flex flex-row h-100">
+                    <li class="nav-item d-flex align-items-center">
+                        <span class="nav-link  d-flex align-items-center" href="#">Balance: {{api_user.balance}} </span>
+                    </li>
+
+                    <div class="d-flex align-items-center">
+                        <a href="{% url 'posts:checkout' %}"
+                            class="btn {% if api_user.balance <= 10 %} btn-warning  {% else %} btn-primary{% endif %} btn-md"
+                            type="button">
+                            <i class="bx bxs-cart align-middle"></i> Buy Credits
+                        </a>
+                    </div>
+                </ul>
+
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="bx bx-bell bx-tada"></i>
+                    {% if false_count > 0 %}
+                    <span class="badge bg-danger rounded-pill">{{ false_count }}</span>
+                    {% endif%}
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-0" key="t-notifications">Notifications</h6>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{% url 'view_all_notifications' %}" class="small" key="t-view-all">View All</a>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div data-simplebar style="max-height: 230px;">
+                        {% for notification in notifications reversed %}
+                        <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                            <div class="d-flex custom-margin">
+                                <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                <div class="avatar-xs me-3">
+                                    {% if notification.sender.profile_picture %}
+                                <img class="rounded-circle header-profile-user" src="{{ notification.sender.profile_picture.url }}"
+                                    alt="Header Avatar">
+                                {% else %}
+                                <img class="rounded-circle header-profile-user" src="{% static 'assets/img/faviconsmall_cuc_1.ico' %}" alt="Header Avatar">
+                                {% endif %}
+                                </div>
+                                 <a href="{% url 'notification_detail' notification.id %}" class="text-reset notification-item">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1"> {{ notification.sender_role }}, level {{notification.sender_level}} </h6>
+                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i>
+                                            {{ notification.timestamp }}</p>
+                                    <div class="font-size-12 text-muted">
+                                       
+                                        <p class="mb-1" style="padding-right: 20px;">{{ notification.message|truncatechars_html:150|safe }}</p>
+
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                            </a>
+                        </a>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if user.profile_picture %}
+                    <img class="rounded-circle header-profile-user" src="{{ user.profile_picture.url }}"
+                        alt="Header Avatar">
+                    {% else %}
+                    <img class="rounded-circle header-profile-user" src="{% static 'images/users/avatar-blue.png' %}"
+                        alt="Header Avatar">
+                    {% endif %}
+                    <span class="d-none d-xl-inline-block ms-1"></span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item"><i class="mdi mdi-account-circle-outline d-none d-xl-inline-block"></i>
+                        <span key="t-lock-screen">{{ user.email }}</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item">
+                        <span key="t-lock-screen">Level {{ api_user.level }}</span></a>
+                    <div class="dropdown-divider"></div>
+                    {% if user.is_authenticated %}
+
+                    {% if user.has_usable_password %}
+                    <a class="dropdown-item" href="{% url 'account_change_password' %}"><i
+                            class="bx bx-key font-size-16 align-middle me-1"></i> Change Password</a>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'account_set_password' %}"><i
+                            class="bx bx-key font-size-16 align-middle me-1"></i> Set Password</a>
+                    {% endif %}
+                    <a class="dropdown-item text-danger"
+                        href="{% url 'account_logout' %}?next={% url 'posts:index' %}"><i
+                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i>Log Out</a>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'account_login' %}"><i
+                            class="bx bx-log-in font-size-16 align-middle me-1 "></i> Log In</a>
+                    {% endif %}
+                </div>
+            </div>
+
+      {% endif %}
+
+            <div class="dropdown d-inline-block">
+                 {%  if not request.user.is_authenticated %}
+                <a href="{% url 'posts:signin' %}">
+                <button type="button" class="btn header-item waves-effect">
+                    Login
+                </button>
+                {% endif %}
+                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <img id="header-lang-img" src="{% static 'images/flags/us.jpg' %}" alt="Header Language"
+                        height="16">
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="en">
+                        <img src="{% static 'images/flags/us.jpg' %}" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">English</span>
+                    </a>
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">
+                        <img src="{% static 'images/flags/spain.jpg' %}" alt="user-image" class="me-1" height="12">
+                        <span class="align-middle">Spanish</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="gr">
+                        <img src="{% static 'images/flags/germany.jpg' %}" alt="user-image" class="me-1" height="12">
+                        <span class="align-middle">German</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="it">
+                        <img src="{% static 'images/flags/italy.jpg' %}" alt="user-image" class="me-1" height="12">
+                        <span class="align-middle">Italian</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="{% static 'images/flags/russia.jpg' %}" alt="user-image" class="me-1" height="12">
+                        <span class="align-middle">Russian</span>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</header>
+
+{% endblock %}

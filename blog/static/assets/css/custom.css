@@ -1,0 +1,56 @@
+.logo-small{
+    width: 100%;
+    height: auto;
+
+    }
+
+.TeletegLogo{
+    max-width: 90px;
+    max-height: auto;
+ 
+}
+
+.dashboard-logo{
+    margin-top: 2rem;
+}
+
+.payments-holder{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.payments{
+    display: flex;
+    justify-content: center;
+}
+#points-input{
+    width: 100%;
+    max-width: 600px;
+    align-self: center;
+    margin-bottom: 2rem;
+}
+.purchase-alert{
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    display: none;
+}
+.purchase-success{
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+    display: block;
+}
+
+.purchase-failure{
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    display: block;
+}

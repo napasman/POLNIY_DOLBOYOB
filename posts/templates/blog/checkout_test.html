@@ -1,0 +1,228 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link href="{% static 'libs/select2/dist/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+assets
+{% block contents %}
+                        <div class="checkout-tabs">
+                                <div class="row">
+                                    <div class="col-xl-2 col-sm-3 mb-3">
+                                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                          
+                                            <a class="nav-link active" id="v-pills-payment-tab" data-bs-toggle="pill"  role="tab" aria-controls="v-pills-payment" aria-selected="false"> 
+                                                <i class= "bx bx-money d-block check-nav-icon mt-4 mb-2"></i>
+                                                <p class="fw-bold mb-4">Payment Info</p>
+                                            </a>
+                                          
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-10 col-sm-9">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="tab-content" id="v-pills-tabContent">
+                                                    <div class="tab-pane fade show active" id="v-pills-shipping" role="tabpanel" aria-labelledby="v-pills-payment-tab">
+                                                        <div>
+                                                            <h4 class="card-title">Payment information</h4>
+                                                            <p class="card-title-desc">Please select payment method</p>
+    
+                                                            <div>
+                                                                <h1 class="align-self-center">Buy Credits</h1>
+                                                    <input id="points-input" class="form-control" placeholder="Enter number of credits" type="number" oninput="updateCryptoAmount()" />
+
+
+                                                                <div class="form-check form-check-inline font-size-16">
+                                                                    <input class="form-check-input" type="radio" name="paymentoptionsRadio" id="paymentoptionsRadio2">
+                                                                    <label class="form-check-label font-size-13" for="paymentoptionsRadio2"><i class="fab fa-cc-paypal me-1 font-size-20 align-top"></i> PayPal</label>
+                                                                     <div id="paypal-button" style="display: none;"></div>
+                                                                    
+                                                                </div>
+                                                    <div class="spacing-between-divs"></div>
+                                                                <div class="form-check form-check-inline font-size-16">
+                                                                    <input class="form-check-input" type="radio" name="paymentoptionsRadio" id="paymentoptionsRadio3">
+                                                                    <label class="form-check-label font-size-13" for="paymentoptionsRadio3"><i class="fab fa-bitcoin font-size-20 align-top"></i> Pay with crypto</label>
+                                                                   <form id="crypto-payment-form" action="{% url 'process_payment' %}" method="post">
+            
+                                                          <input type="hidden" name="amount" id="crypto-amount" value="">
+                                                          <input type="hidden" name="currency" value="USD">
+                                                          <input type="hidden" name="network" value="tron"> <!-- Update with the actual network value -->
+                                                          <input type="hidden" name="order_id" id="order-id" value="0">
+                                                          <input type="hidden" name="url_return" value="http://teleteg:3000/webhook"> <!-- Update with your return URL -->
+                                                          <button id="pay-with-crypto-button" class="fab fa-bitcoin" type="submit" style="display:none;"> CRYPTO</button>
+                                                        </form>
+                                           
+                                   
+                                                                </div>
+ 
+                                                            </div>
+     
+                                            
+                                                <div class="container text-center">
+                                                    
+                                   </div> <!-- end col -->
+                                        </div> <!-- end row -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+
+
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+
+
+const payWithCryptoButton = document.getElementById('pay-with-crypto-button');
+payWithCryptoButton.addEventListener('click', function() {
+    const cryptoAmountInput = document.getElementById('crypto-amount');
+    const pointsInput = document.getElementById('points-input');
+    const calculatedAmount = Number(pointsInput.value); // Calculate amount
+
+    // Set the calculated amount to the hidden input field
+    cryptoAmountInput.value = calculatedAmount * 0.1;
+
+    // Set a random order ID and update the input field
+    const randomOrderId = Math.floor(Math.random() * 1000000);
+    const orderIDInput = document.getElementById('order-id');
+    orderIDInput.value = randomOrderId;
+});
+
+    
+
+    
+
+   function renderPayPalButton() {
+       paypalButtonRendered = true;
+            paypalButtonContainer.style.display = 'block';
+  paypal.Button.render({
+    // Configure environment
+    env: 'production',
+    client: {
+      sandbox: 'AUDDTQK24TLs6N-FTuW09Kic2albl8a9oHQFZSkG_FIDPs4fAKKymBszE0ojdgkwfdIvnbBOZt6JbyK7',
+      production: 'AXWvfWjRKD9ZtZ4l0BKfaMlOd3CR77cCUiAEEA6V_xCMm_zFvRYzm2x1NdXzWGLCqPVJIkciY6XEvjYC'
+    },
+    // Customize button (optional)
+    locale: 'en_US',
+    style: {
+      size: 'small',
+      color: 'gold',
+      shape: 'pill',
+    },
+
+    // Enable Pay Now checkout flow (optional)
+    commit: true,
+
+    // Set up a payment
+    payment: function(data, actions) {
+      number_of_points = document.getElementById("points-input").value;
+      if (number_of_points < 100) {
+        alert("Minimum order is 10$.");
+        throw new Error("Minimum points not met.");
+      }
+
+      return actions.payment.create({
+        transactions: [{
+          amount: {
+            total: Number(number_of_points) * 0.1, // Calculate the total amount
+            currency: 'USD'
+          }
+        }]
+      });
+    },
+
+    // Execute the payment
+    onAuthorize: function(data, actions) {
+      return actions.payment.execute().then(function() {
+        let csrftoken = getCookie('csrftoken');
+        purchase_message = document.getElementById("purchase-message");
+
+        fetch('/payments/paypal/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...data, points: Number(number_of_points) }),
+          headers: { "X-CSRFToken": csrftoken }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          purchase_message.classList.add("purchase-success");
+          purchase_message.textContent = `Purchase successful, your balance is now ${data.balance}`;
+        })
+        .catch((error) => {
+          purchase_message.classList.add("purchase-failure");
+          purchase_message.textContent = `Purchase failed`;
+        });
+      });
+    }
+  }, '#paypal-button');
+   }
+  
+ let paypalButtonRendered = false; // Track if PayPal button is already rendered
+        const paypalButtonContainer = document.getElementById('paypal-button');
+        const paypalRadioButton = document.getElementById('paymentoptionsRadio2');
+
+        paypalRadioButton.addEventListener('click', function() {
+            if (paypalRadioButton.checked && !paypalButtonRendered) {
+                renderPayPalButton();
+            } else if (!paypalRadioButton.checked) {
+                removePayPalButton();
+            }
+        });
+
+
+        function removePayPalButton() {
+            paypalButtonRendered = false;
+            paypalButtonContainer.style.display = 'none';
+            paypalButtonContainer.innerHTML = ''; // Remove button element
+        }
+
+const cashOnDeliveryRadioButton = document.getElementById('paymentoptionsRadio3');
+
+paypalRadioButton.addEventListener('click', function() {
+    if (paypalRadioButton.checked && !paypalButtonRendered) {
+        renderPayPalButton();
+    } else if (!paypalRadioButton.checked) {
+        removePayPalButton();
+    }
+});
+
+cashOnDeliveryRadioButton.addEventListener('click', function() {
+    removePayPalButton();
+});
+
+// crypto hide and show
+
+const cryptoButton = document.getElementById('pay-with-crypto-button');
+const paypalRadioButton2 = document.getElementById('paymentoptionsRadio2');
+const cryptoRadioButton = document.getElementById('paymentoptionsRadio3');
+
+// Function to update the visibility of the crypto button
+function updateCryptoButtonVisibility() {
+    if (cryptoRadioButton.checked) {
+        cryptoButton.style.display = 'block';
+    } else {
+        cryptoButton.style.display = 'none';
+    }
+}
+
+// Listen for click events of the radio buttons
+paypalRadioButton2.addEventListener('click', updateCryptoButtonVisibility);
+cryptoRadioButton.addEventListener('click', updateCryptoButtonVisibility);
+
+
+
+  </script>
+                            <!-- end row -->
+
+{% endblock %}
+
+
+{% block extra_javascript %}
+    <script src="{% static 'libs/select2/dist/js/select2.min.js' %}"></script>
+
+    <!-- init js -->
+    <script src="{% static 'js/pages/ecommerce-select2.init.js' %}"></script>
+{% endblock %}

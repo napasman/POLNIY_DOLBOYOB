@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta name="google-site-verification" content="ZHBKlOZ3TgBcdKptqsmQS3qjSQM8xFAtBqxFWH8t3aE" />
+    {% load static cms_tags menu_tags sekizai_tags %}
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="search, search-engine, telegram">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="{% static 'assets/img/favicon33.png' %}" class="TeletegLogo"/>
+
+  <!-- Map CSS -->
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" />
+
+  <!-- Libs CSS -->
+  <link rel="stylesheet" href="{% static './assets/css/libs.bundle.css'%}" />
+
+  <!-- Theme CSS -->
+  <link rel="stylesheet" href="{% static './assets/css/theme.bundle.css'%}" />
+
+  <link rel="stylesheet" href="{% static './assets/css/custom.css'%}" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans" rel="stylesheet">
+
+  <style>
+    .truncate-text {
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: smaller;
+    }
+
+    .text-google-font {
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .text-column-align {
+        text-align: center;
+    }
+
+    .tooltip-arrow,.red-tooltip + .tooltip > .tooltip-inner {background-color: #f00;}
+  </style>
+
+
+  <title>{% block title %}{% page_attribute page_title %}{% endblock %}</title>
+
+</head>
+{% render_block "css" %}
+
+<body>
+  {% cms_toolbar %}
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container">
+      <!-- Brand -->
+      <a class="navbar-brand" href="/">
+        <img src="{% static 'assets/img/TeletegLogo.jpg' %}" class="TeletegLogo" alt="..." />
+      </a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fe fe-x"></i>
+        </button>
+
+         <!-- Navigation -->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:pricing' %}"> Pricing </a>
+          </li>
+          {% if  user.is_authenticated %}
+          <li class="nav-item">
+            <a href="{% url 'user_dashboard' %}" class="nav-link"> Dashboard </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a href="{% url 'posts:marketplace' %}" class="nav-link"> Marketplace </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:blog' %}"> Blog </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:help_center' %}"> Help center </a>
+          </li>
+          
+          {% if not user.is_authenticated %}
+                     <li class="nav-item">
+            <a class="nav-link" href="https://teleteg.com/helpcenter/#contacts"> Contacts </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:signin' %}"> Login </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:signup' %}"> Sign Up </a>
+          </li>
+          {% else %}
+         
+           <li class="nav-item">
+            <a class="nav-link" href="https://teleteg.com/helpcenter/#contacts"> Contacts </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:logout' %}"> Logout</a>
+          </li>
+
+          {% endif %}
+          {% if request.user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'posts:csv_file' %}"> CSV </a>
+          </li>
+          {%else%}
+
+          {% endif %}
+
+        </ul>
+
+
+
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  {% block content %} {% endblock content %}
+  <!-- JAVASCRIPT -->
+  <!-- Map JS -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
+
+  <!-- Vendor JS -->
+  <script src="{% static './assets/js/vendor.bundle.js'%}"></script>
+
+  <!-- Theme JS -->
+  <script src="{% static './assets/js/theme.bundle.js'%}"></script>
+  {% render_block "js" %}
+</body>
+
+</html>

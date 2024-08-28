@@ -1,0 +1,48 @@
+{% extends 'authentication/base.html' %}
+{% block contents %}
+
+<div class="mt-4">
+    <div class="d-flex flex-wrap">
+        <h5 class="font-size-16 me-3">Saved {{category}}</h5>
+    </div>
+    <hr class="mt-2">
+
+    <div class="table-responsive min-vh-100">
+        <table class="table align-middle table-nowrap table-hover mb-0">
+            <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Date Created</th>
+                  <th scope="col" colspan="2">Size</th>
+                </tr>
+              </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td><a href="#" class="text-dark fw-medium"  target="_blank"><i class="mdi mdi-file-document font-size-16 align-middle text-primary me-2"></i>{{file.file.name}}</a></td>
+                    <td>{{file.created}}</td>
+                    <td>{{file.file.size|filesizeformat}}</td>
+                    <td>
+                        <div class="dropdown">
+                            <a class="font-size-16 text-muted" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                <i class="mdi mdi-dots-horizontal"></i>
+                            </a>
+                            
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="{% url 'download_file' file.id %}">Open</a>
+                                <a class="dropdown-item" href="{% url 'download_file' file.id %}">Download(Json)</a>
+                                <a class="dropdown-item" href="{% url 'download_excel' file.id %}">Download(Excel)</a>
+                       
+                            </div>
+                        </div>
+                    
+                    </td>
+                </tr>
+
+                
+           {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,390 @@
+{% load static %}
+{% if table == 'channels' %}
+<style>
+    .bg-success-soft {
+        background-color: rgba(0, 255, 0, 0.3); /* Lighter green color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+
+    .bg-danger-soft {
+        background-color: rgba(255, 0, 0, 0.3); /* Lighter red color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+    
+    .truncate-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px; /* Adjust the max-width to your desired length */
+    }
+    .my-alert {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+    }
+    
+    .my-alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+    
+    .my-icon {
+      margin-right: 0.5rem;
+    }
+    
+    .my-icon-block-helper {
+      /* Add your custom icon styles here */
+    }
+    
+    .my-close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      background-color: transparent;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: inherit;
+    }
+    
+     .text-google-font {
+    font-weight: bold;
+  }
+</style>
+
+
+<div class="container overflow-auto">
+    {% if filter == 'groups' %}
+        <h1>This is the list of Telegram Groups related to {{ language }} {{ keyword }} {{ additional_keyword }}.</h1>
+        <p>Within these groups, you can access links to various communities, supergroups, and chats focused on Telegram groups related to {{ keyword }}  {{ additional_keyword }}. Engage with like-minded individuals who share a common interest and knowledge in the {{ keyword }}  {{ additional_keyword }} realm. These groups serve as platforms for discussions, problem-solving, and exchanging wonders related to the world of {{ keyword }}  {{ additional_keyword }}. <a href="https://teleteg.com/">Search more groups.</a></p>
+    {% elif filter == 'channels' %}
+        <h1>This is the list of Telegram Channels related to {{ language }} {{ keyword }} {{ additional_keyword }}.</h1>
+        <p>In this list, you'll find links to various channels dedicated to {{ keyword }} {{ additional_keyword }}. Connect with people who share your interest and knowledge in this area. These channels are platforms for discussion, problem-solving, and sharing insights related to the world of {{ keyword }} {{ additional_keyword }}. <a href="https://teleteg.com/">Search more channels.</a></p>
+    {% endif %}
+    <br>
+
+            <table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col"><strong>Link</strong></th>
+      <th scope="col"><strong>Title</strong></th>
+      <th scope="col"><strong>Description</strong></th>
+      <th scope="col"><strong>Memb</strong></th>
+      <th scope="col"><strong>Rating</strong></th>
+      <th scope="col"><strong>Msg Qlt</strong></th>
+      <th scope="col"><strong>Online</strong></th>
+      <th scope="col"><strong>Created</strong></th>
+      <th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send messages">MS</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send media messages">MMS</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can send polls">PL</span>
+  </strong>
+</th>
+<th scope="col">
+  <strong>
+    <span data-bs-toggle="tooltip" data-bs-placement="top" title="can invite users ">IN</span>
+  </strong>
+</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for result in table_results %}
+    <tr>
+      <td>
+        <a href="https://t.me/{{ result.username }}" target="_blank"  rel="nofollow noopener noreferrer" >
+          <p class="truncate-text">{{ result.username }}</p>
+        </a>
+      </td>
+      <td>
+        <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ result.title }}">{{ result.title }}</p>
+      </td>
+      <td>
+    {% if result.description %}
+        <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ result.description }}">{{ result.description }}</p>
+    {% else %}
+        <p class="truncate-text">None</p>
+    {% endif %}
+</td>
+
+      <td>{{ result.members_count }}</td>
+      <td>{{ result.rating }}</td>
+     <td>{{ result.rating_by_messages|default:"None" }}</td>
+        <td>{{ result.online|default:"None" }}</td>
+        <td>{{ result.creation_date|default:"None" }}</td>
+      <td>
+        {% if result.can_send_messages|lower == 'true' %}
+        <span class="badge rounded-pill bg-success-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% else %}
+        <span class="badge rounded-pill bg-danger-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% endif %}
+      </td>
+      <td>
+        {% if result.can_send_media_messages|lower == 'true' %}
+        <span class="badge rounded-pill bg-success-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% else %}
+        <span class="badge rounded-pill bg-danger-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% endif %}
+      </td>
+      <td>
+        {% if result.can_send_polls|lower == 'true' %}
+        <span class="badge rounded-pill bg-success-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% else %}
+        <span class="badge rounded-pill bg-danger-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% endif %}
+      </td>
+      <td>
+        {% if result.can_invite_users|lower == 'true'%}
+        <span class="badge rounded-pill bg-success-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% else %}
+        <span class="badge rounded-pill bg-danger-soft">
+          <p class="text-hide"></p>
+        </span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+ {% if filter == 'groups' %}
+<p>Explore an extensive array of groups using the powerful Telegram search engine available at <a href="https://teleteg.com/">teleteg.com</a>. Utilize advanced features and filters to precisely target your desired Telegram audience. With this comprehensive search tool, you can effortlessly find groups, channels, members, admins, and more. Enjoy the benefit of accessing up to 100 free results per day. For enhanced search capabilities and analytics for commercial purposes, consider opting for the paid plan, which unlocks additional features and insights.<p>
+     {% elif filter == 'channels' %}
+        <p>Discover a wide range of channels using the advanced search capabilities of the Telegram search engine on <a href="https://teleteg.com/">teleteg.com</a>. This tool offers sophisticated features and filters, allowing you to accurately find your target audience on Telegram. Search for groups, channels, members, admins, and more with ease. Access up to 50 free search results daily. For more extensive search options and analytics tailored for commercial use, you may choose the paid plan, which provides additional features and deeper insights.</p>
+    {% endif %}
+        </div>
+{% endif %}
+
+
+{% if table == 'users' %}
+<style>
+        .bg-success-soft {
+        background-color: rgba(0, 255, 0, 0.3); /* Lighter green color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+
+    .bg-danger-soft {
+        background-color: rgba(255, 0, 0, 0.3); /* Lighter red color with opacity */
+        display: inline-block;
+        width: 20px; /* Adjust the width and height to achieve the desired circle size */
+        height: 20px;
+        border-radius: 50%; /* Ensure the element is rendered as a circle */
+    }
+    
+    .truncate-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px; /* Adjust the max-width to your desired length */
+    }
+    .my-alert {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+    }
+    
+    .my-alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+    
+    .my-icon {
+      margin-right: 0.5rem;
+    }
+    
+    .my-icon-block-helper {
+      /* Add your custom icon styles here */
+    }
+    
+    .my-close-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      background-color: transparent;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: inherit;
+    }
+   
+     .text-google-font {
+    font-weight: bold;
+  }
+    
+      td:first-child,
+  th:first-child {
+    padding-left: 10px; /* Adjust the left padding to move the content more to the left */
+  }
+  
+   .hide-column {
+    display: none; /* Hide the columns with this class */
+  }
+  
+  .table-container {
+    width: 50%; /* Adjust the width as desired */
+ 
+  }
+</style>
+<div class="container overflow-auto">
+    <h1>This is the list of Telegram {{filter}}  related to  {{language}} {{keyword}} {{ additional_keyword }}.</h1>
+         {% if filter == 'admins' %}
+            <p>In this list, you will find contact information for a variety of Telegram group and channel admins who specialize in {{keyword}}. Connect with these admins to engage with people who share your interest and expertise in this area. These admins manage platforms for discussion, problem-solving, and exchanging insights about {{keyword}} {{ additional_keyword }}. Discover more about this field by directly interacting with these knowledgeable administrators. <a href="https://teleteg.com/">Search more admins.</a><p>
+         {% elif  filter == 'members' %}
+         <p>In this list, you will find information about various members of Telegram groups and channels focused on  {{keyword}}. Connect with these members to engage with individuals who share your interest and expertise in this area. These members are part of platforms that facilitate discussion, problem-solving, and the exchange of insights about  {{keyword}} {{ additional_keyword }}. Expand your understanding of this field by directly interacting with these knowledgeable and enthusiastic members.  <a href="https://teleteg.com/">Search more members.</a><p>
+         {% endif %}
+  <table class="table table-sm table-container">
+    <thead>
+      <tr>
+        <th scope="col"><strong>Username</strong></th>
+        <th scope="col"><strong>First name</strong></th>
+        <th scope="col"><strong>Last name</strong></th>
+        <th scope="col"><strong>User ID</strong></th>
+        <th scope="col"><strong>Rating</strong></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in table_results %}
+      <tr>
+       <td>
+        <a href="https://t.me/{{ result.username }}"  rel="nofollow noopener noreferrer"  target="_blank">
+          <p class="truncate-text">{{ result.username }}</p>
+        </a>
+      </td>
+        <td>
+        <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ result.first_name }}">{{ result.first_name }}</p>
+      </td>
+        <td>
+        <p class="truncate-text" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ result.last_name }}">{{ result.last_name }}</p>
+      </td>
+        <td>{{ result.user_id|default:"None" }}</td>
+        <td>{{ result.rating|floatformat:2|default:"None"  }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+ 
+      
+      {% if filter == 'admins' %}
+            <p>Discover a diverse array of group and channel admins using the powerful search capabilities of the Telegram search engine at <a href="https://teleteg.com/">teleteg.com</a>. This tool is equipped with advanced features and filters, enabling you to precisely locate and connect with the admins of various Telegram groups. Search for groups, their admins, members, and more with ease. You can access up to 50 free search results each day. For those seeking more comprehensive search functionalities and analytics, especially for commercial purposes, a paid plan is available. This plan offers enhanced features and deeper insights, ideal for targeting specific Telegram group admins.<p>
+         {% elif  filter == 'members' %}
+         <p>Utilize the sophisticated search capabilities of  <a href="https://teleteg.com/">teleteg.com</a> to discover a broad range of Telegram group members. This search engine offers advanced features and filters, allowing you to precisely connect with members of various Telegram groups. Easily search for groups, their members, admins, and more. Enjoy the convenience of accessing up to 50 free search results each day. For those requiring more in-depth search options and analytics, particularly for commercial purposes, consider the paid plan. This plan provides additional features and insights, making it easier to target and understand specific Telegram group members.<p>
+         {% endif %}
+</div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      
+{% if table_results %}
+<div class="d-flex justify-content-end w-100 container p-" style="margin-right: 2rem;">
+
+
+          <button onclick="window.location.href='https://teleteg.com/signup/';" class="btn btn-primary">Register now</button>
+
+    
+
+
+
+</div>
+
+
+
+{% else %}
+<div class="my-alert my-alert-danger">
+    <i class="my-icon my-icon-block-helper"></i>
+    <strong>You have reached your daily search limit.</strong>&nbsp; It will  reset at 00.00 GMT time.
+    <button type="button" class="my-close-button" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  $('#save-results-btn').click(function() {
+    // Replace 'None' with null in the table_results data
+    var tableResults = {{ table_results|safe }};
+    var processedResults = JSON.stringify(tableResults, function(key, value) {
+      return value === 'None' ? null : value;
+    });
+    console.log(processedResults); // Log the processedResults data
+
+    $.ajax({
+      url: '/download/{{ filter }}/',  // Replace with the URL of your Django view or function
+      type: 'POST',
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}',  // Ensure you have the CSRF token available in your template
+        results: processedResults,  // Pass the processedResults as the data
+      },
+      success: function(response) {
+        console.log('Results saved successfully');
+
+         window.location.href ="{% url 'file_manager' %}"
+      },
+      error: function(xhr, status, error) {
+        console.error('Failed to save results:', error);
+      }
+    });
+  });
+});
+</script>
+
+

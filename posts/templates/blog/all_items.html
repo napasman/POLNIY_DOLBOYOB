@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Telegram {{ item_type|title }} Lists
+{% endblock %}
+
+{% block content %}
+{% load static%}
+
+<link
+href="{% static 'css/icons.min.css' %}"
+rel="stylesheet"
+type="text/css"
+/>
+
+
+
+<style>
+    .list-group-item{
+        border: 1px solid rgba(0,0,0,.125);
+        padding: 0.75rem 1.25rem;
+    }
+    .mt-5{
+        max-width: 1140px;
+    }
+</style>
+ <title>Telegram {{ item_type|title }} Lists</title>
+    <div class="container mt-5">
+        <h1>Telegram {{ item_type|title }} Lists</h1>
+          {% if item_type == 'Groups' %}
+        <p>Welcome to our list of Telegram Groups, a selection of vibrant communities for connecting, sharing, and engaging with others. Our directory, encompassing technology, health, entertainment, crypto and more, caters to various interests. Carefully chosen, each group ensures a safe, respectful space for dialogue. Discover groups that match your interests for learning, discussion, and networking. Join to share your expertise or enjoy global conversations. Happy exploring!</p>
+    {% elif item_type == 'Channels' %}
+        <p>Welcome to our curated collection of Telegram Channels, a diverse array of vibrant platforms for staying informed, entertained, and connected. Whether your interests lie in technology, health, entertainment, or any other field, our directory is tailored to accommodate a wide range of preferences. Each channel is meticulously selected to offer a secure, respectful environment conducive to information sharing and engagement. Browse through our selection to find channels that resonate with your interests, providing a rich resource for updates, insights, and community interaction. Engage with these channels to keep abreast of the latest trends, share your knowledge, or simply partake in engaging discussions with global audiences. Happy exploring and connecting!</p>
+    {% elif item_type == 'Members' %}
+        <p>Welcome to our exclusive showcase of Telegram Members, a dynamic array of individuals who bring life and diversity to the platform. Whether interested in technology, health, entertainment, or other fields, our community is rich with members from various backgrounds. Each member contributes to a unique and respectful environment, fostering fruitful dialogue and exchange. Engage with our diverse member base to expand your network, share knowledge, and enjoy meaningful conversations. Discover members with shared interests for collaboration, learning, and networking. Join this vibrant community to stay informed, contribute your expertise, or simply enjoy the rich tapestry of global interactions. Happy connecting and discovering!</p>
+    {% elif item_type == 'Admins' %}
+        <p>Welcome to our curated directory of Telegram Admins, a specialized selection of dedicated individuals who are the keystones of Telegram communities. Whether they're managing groups in technology, health, entertainment, or various other fields, our list features admins known for their commitment, expertise, and leadership. This directory is crafted to help you find and connect with admins across a multitude of interests, each bringing a unique approach to community management and engagement. Dive into our list to discover admins who not only align with your specific interests but also foster safe, respectful, and dynamic environments for interaction and growth. Reach out to these community leaders to gain insights, share knowledge, or collaborate on enriching the Telegram experience. Happy exploring and connecting with the backbone of Telegram's vibrant communities!</p>
+    {% endif %}
+
+        <ul class="list-group">
+            {% for item in all_page %}
+    <li class="list-group-item">
+        {% if request.user.is_superuser %}
+    <!-- Update the form ID to include the item ID -->
+<form method="post" class="float-right" id="deleteForm_{{ item.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="item_id" value="{{ item.id }}">
+    
+    <!-- Replace the button with an icon -->
+    <i class="bx bx-trash delete-icon" onclick="submitForm('deleteForm_{{ item.id }}')"></i>
+</form>
+
+{% endif %}
+
+<script>
+   function submitForm(formId) {
+        document.getElementById(formId).submit();
+    }
+</script>
+
+        <a href="{{ item.url }}"  target="_blank">{{ item.url }}</a>
+
+        
+    </li>
+{% endfor %}
+
+        </ul>
+        
+        <!-- Single pagination for all items -->
+        <nav aria-label="All items pagination">
+            {% if all_page.has_other_pages %}
+                <ul class="pagination justify-content-center mt-4">
+                    {% if all_page.has_previous %}
+    <li class="page-item">
+        <a class="page-link" href="{% url 'posts:'|add:view_name page=all_page.previous_page_number %}">previous</a>
+    </li>
+{% else %}
+    <li class="page-item disabled">
+        <span class="page-link">previous</span>
+    </li>
+{% endif %}
+
+        
+                    {% for page_num in all_page.paginator.page_range %}
+                        {% if all_page.number == page_num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% elif page_num > all_page.number|add:"-3" and page_num < all_page.number|add:"3" %}
+                            <li class="page-item">
+                                <a class="page-link" href="{% url 'posts:'|add:view_name page=page_num %}">{{ page_num }}</a>
+                            </li>
+                        {% elif page_num == all_page.paginator.num_pages or page_num == 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{% url 'posts:'|add:view_name page=page_num %}">{{ page_num }}</a>
+                            </li>
+                        {% elif page_num == all_page.number|add:"-4" or page_num == all_page.number|add:"4" %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %} 
+        
+                    {% if all_page.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{% url 'posts:'|add:view_name page=all_page.next_page_number %}">next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </nav>
+    </div>
+    <style>
+    .TeletegLogo2, .ul{
+         display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+    }
+    
+    ul.list-unstyled.list-inline.list-social.mb-6.mb-md-0{
+        text-align: center;
+    }
+    .bx{
+        color: gray;
+    }
+</style>
+
+<footer class="py-8 py-md-11 bg-gray-200">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-3">
+        <!-- Brand -->
+              <a href="{% url 'posts:index' %}">
+    <img src="{% static 'assets/img/TeletegLogo.png' %}" class="TeletegLogo2" alt="..." class="footer-brand img-fluid mb-2" />
+</a>
+
+        <!-- Text 
+        <p class="text-gray-700 mb-2">A better way to build.</p>-->
+
+        <ul class="list-unstyled list-inline list-social mb-6 mb-md-0">
+
+
+          <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+              <!-- YouTube -->
+          <!-- Home Icon for Testing -->
+          <li class="list-inline-item list-social-item me-3">
+            <a href="https://youtube.com/@Teleteg" class="text-decoration-none">
+                <i class="bx bxl-youtube"></i>
+            </a>
+          </li>
+
+        <!-- TikTok -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.tiktok.com/@teleteg" class="text-decoration-none">
+              <i class="bx bxl-tiktok"></i>
+            </a>
+        </li>
+        
+                <!-- Instagram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.instagram.com/teleteg/" class="text-decoration-none">
+              <i class="bx bxl-instagram-alt"></i>
+            </a>
+        </li>
+
+
+        <!-- Telegram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://t.me/teletegch" class="text-decoration-none">
+              <i class="bx bxl-telegram"></i>
+            </a>
+        </li>
+        
+        <!-- Twitter -->
+        <li class="list-inline-item list-social-item ">
+            <a href="https://twitter.com/teletegofficial" class="text-decoration-none">
+              <i class="bx bxl-twitter"></i>
+            </a>
+        </li>
+    </ul>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">MENU</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+            <a href="{% url 'posts:pricing' %}" class="text-reset"> Pricing </a>
+          </li>
+           {% if  user.is_authenticated %}
+          <li class="mb-3">
+            <a href="{% url 'user_dashboard' %}" class="text-reset"> Dashboard </a>
+          </li>
+
+          {% endif %}
+          <li class="mb-3">
+            <a href="{% url 'posts:blog' %}" class="text-reset">Blog </a>
+          </li>
+          {% if not user.is_authenticated %}
+                <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signin' %}" class="text-reset"> Login </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signup' %}" class="text-reset"> Sign Up </a>
+          </li>
+     
+          {% else %}
+          
+          <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'posts:logout' %}" class="text-reset"> Logout </a>
+          </li>
+           {% endif %}
+           
+        </ul>
+      </div>
+      
+   <div class="col-6 col-md-4 col-lg-3">
+    <!-- Heading -->
+    <div class="d-flex align-items-center">
+        <h6 class="fw-bold text-uppercase text-gray-700" style="white-space: nowrap;">Popular Search Terms</h6>
+    </div>
+    
+    <!-- List with custom CSS -->
+   <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_groups_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Groups </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_channels_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Channels </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_members_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Members </a>
+        </li>
+        <li>
+            <a href="{% url 'posts:telegram_admins_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Admins </a>
+        </li>
+        <!-- Add more links as needed -->
+    </ul>
+</div>
+<div class="col-6 col-md-4 col-lg-3">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">Specials</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+             <a href="{% url 'posts:marketplace' %}" class="text-reset" style="white-space: nowrap;">Marketplace </a>
+          </li>
+   
+          <li class="mb-3">
+            <a href="https://teleteg.com/blogs/telegram-search-tools-and-metrics#referral-program" class="text-reset" style="white-space: nowrap;">Referral Program </a>
+          </li>
+                    <li class="mb-3">
+            <a href="https://t.me/teleteg_support" class="text-reset" style="white-space: nowrap;">Tech Support </a>
+          </li>
+          <li >
+            <a href="{% url 'posts:help_center' %}" class="text-reset"> Help center </a>
+          </li>
+          
+           
+        </ul>
+      </div>
+
+    </div>
+    <!-- / .row -->
+  </div>
+
+  <!-- / .container -->
+</footer>
+    <!-- Include Bootstrap JS and jQuery (needed for Bootstrap features) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+  
+    {% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'authentication/base.html' %}
+{% block contents %}
+
+{% load auth_extras %}
+
+                        <div class="d-xl-flex" id="user-files">
+                            <div class="w-100">
+                                <div class="d-md-flex">
+                            
+                                    <div class="w-100">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="mt-2">
+                                                                <h5>My Files</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-9 col-sm-6">
+                                                            <form class="mt-4 mt-sm-0 float-sm-end d-flex align-items-center">
+                                                                <div class="search-box mb-2 me-2">
+                                                                    <div class="position-relative">
+                                                                        <input type="text" class="form-control bg-light border-light rounded" placeholder="Search...">
+                                                                        <i class="bx bx-search-alt search-icon"></i>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <div class="row">
+                                                      
+        
+                                            
+                                                      {% include 'authentication/file.html' with heading="groups" files=api_user.downloads.all|filterFiles:"groups" size=api_user.downloads.all|getSize:"groups" %}  
+                                                      {% include 'authentication/file.html' with heading="channels" files=api_user.downloads.all|filterFiles:"channels" size=api_user.downloads.all|getSize:"channels" %}
+                                                      {% include 'authentication/file.html' with heading="members" files=api_user.downloads.all|filterFiles:"members" size=api_user.downloads.all|getSize:"members" %}
+                                                      {% include 'authentication/file.html' with heading="admins" files=api_user.downloads.all|filterFiles:"admins" size=api_user.downloads.all|getSize:"admins" %}
+                                                      {% include 'authentication/file.html' with heading="user" files=api_user.downloads.all|filterFiles:"user" size=api_user.downloads.all|getSize:"user" %}
+                                                      {% include 'authentication/file.html' with heading="messages" files=api_user.downloads.all|filterFiles:"messages"  size=api_user.downloads.all|getSize:"messages" %}
+                                                      {% include 'authentication/file.html' with heading="marketplace orders" files=api_user.downloads.all|filterFiles:"marketplace orders"  size=api_user.downloads.all|getSize:"marketplace orders" %}
+                                                      <!-- end col -->
+        
+                                                    </div>
+                                                    <!-- end row -->
+                                                </div>
+        
+                                            </div>
+                                        </div>
+                                        <!-- end card -->
+                                    </div>
+                                    <!-- end w-100 -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+                
+
+
+
+{% endblock %}

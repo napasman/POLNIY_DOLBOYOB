@@ -1,0 +1,750 @@
+{% extends 'authentication/base.html' %}
+
+{% block contents %}
+    {% load static %}
+    
+    <style>
+    .pagination-rounded .page-link {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .pagination-rounded .page-item.disabled span.page-link {
+        color: #333;
+        font-weight: bold;
+    }
+    .pagination-rounded {
+        width: 100%;
+        text-align: center;
+        padding: 10px;
+    }
+    .pagination-rounded .page-item .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        font-size: 16px;
+        padding: 5px 10px;
+    }
+     .bx{
+        color: gray;
+    }
+    </style>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'users' %}active{% endif %}" aria-current="page" href="#users-tab" data-bs-toggle="tab">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'free' %}active{% endif %}" href="#free-tab" data-bs-toggle="tab">Free</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if tab == 'referral' %}active{% endif %}" href="#referral-tab" data-bs-toggle="tab">Referral</a>
+        </li>
+    </ul>
+
+    
+    <div class="tab-content">
+        <div class="tab-pane fade {% if tab == 'users' %}show active{% endif %}" id="users-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Users</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="sortable" style="width: 70px;">#</th>
+                                    <th scope="col" class="sortable">Name</th>
+                                    <th scope="col" class="sortable">Email</th>
+                                    <th scope="col" class="sortable">Balance</th>
+                                    <th scope="col" class="sortable">Registration Date</th>
+                                    <th scope="col" class="sortable">Last Login</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        {% if user.user.profile_picture %}
+                                            <td>
+                                                <img class="rounded-circle avatar-xs" src="{{ user.user.get_photo_url }}" alt="">
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title rounded-circle">
+                                                        {{ user.user.name.0 }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        {% endif %}
+                                        <td>
+                                            <h5 class="font-size-14">
+                                                <a href="javascript:void(0);" class="text-dark">
+                                                    {% if user.user.name %}
+                                                        {{ user.user.name }}
+                                                    {% endif %}
+                                                </a>
+                                            </h5>
+                                        </td>
+                                        <td>{{ user.user.email }}</td>
+                                        <td>
+                                            <h5 class="font-size-14">
+                                                <a href="javascript:void(0);" class="text-dark">
+                                                    {{ user.balance }}
+                                                </a>
+                                            </h5>
+                                        </td>
+                                        <td>
+                                            {{ user.user.date_joined }}
+                                        </td>
+                                        <td>
+                                            {{ user.last_api_call }}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5">No users found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="pagination pagination-rounded justify-content-center mt-4">
+                                {% if users.has_previous %}
+                                    <li class="page-item">
+                                        <a href="?page={{ users.previous_page_number }}" class="page-link">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+
+                                {% if users.paginator.num_pages > 1 %}
+                                    {% if users.number > 3 %}
+                                        <li class="page-item">
+                                            <a href="?page=1" class="page-link">1</a>
+                                        </li>
+                                        {% if users.number > 4 %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% for num in users.paginator.page_range %}
+                                        {% if num == users.number %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ num }}</span>
+                                            </li>
+                                        {% elif num > users.number|add:"-3" and num < users.number|add:"3" %}
+                                            <li class="page-item">
+                                                <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if users.number < users.paginator.num_pages|add:"-3" %}
+                                        {% if users.number < users.paginator.num_pages|add:"-4" %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-item">
+                                            <a href="?page={{ users.paginator.num_pages }}" class="page-link">{{ users.paginator.num_pages }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if users.has_next %}
+                                    <li class="page-item">
+                                        <a href="?page={{ users.next_page_number }}" class="page-link">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+               <div class="tab-pane fade {% if tab == 'free' %}show active{% endif %}" id="free-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Free Users</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-nowrap table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" class="sortable" style="width: 70px;">#</th>
+                                    <th scope="col" class="sortable">Name</th>
+                                    <th scope="col" class="sortable">IP Adress</th>
+                                    <th scope="col" class="sortable">Balance</th>
+                                    <th scope="col" class="sortable">Last Login</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for free_user in free_users %}
+                                    <tr>
+                                        {% if free_user.user.profile_picture %}
+                                            <td>
+                                                <img class="rounded-circle avatar-xs" src="{{ free_user.user.get_photo_url }}" alt="">
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <div class="avatar-xs">
+                                                    <span class="avatar-title rounded-circle">
+                                                        {{ free_user.user.name.0 }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        {% endif %}
+                                        <td>
+                                            <h5 class="font-size-14">
+                                                <a href="javascript:void(0);" class="text-dark">
+                                                    {% if free_user.user.name %}
+                                                        {{ free_user.user.name }}
+                                                    {% endif %}
+                                                </a>
+                                            </h5>
+                                        </td>
+                                        <td>{{ free_user.ip_address }}</td>
+
+                                        <td>
+                                            <h5 class="font-size-14">
+                                                <a href="javascript:void(0);" class="text-dark">
+                                                    {{ free_user.balance }}
+                                                </a>
+                                            </h5>
+                                        </td>
+                                        <td>
+                                            {{ free_user.last_api_call }}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5">No free users found.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                       <div class="col-lg-12">
+    <ul class="pagination pagination-rounded justify-content-center mt-4">
+   {% if free_users.has_previous %}
+    <li class="page-item">
+        <a href="?tab=free&free_page={{ free_users.previous_page_number }}" class="page-link">
+            <i class="mdi mdi-chevron-left"></i>
+        </a>
+    </li>
+{% else %}
+    <li class="page-item disabled">
+        <span class="page-link">
+            <i class="mdi mdi-chevron-left"></i>
+        </span>
+    </li>
+{% endif %}
+
+{% if free_users.paginator.num_pages > 1 %}
+    {% if free_users.number > 4 %}
+        <li class="page-item">
+            <a href="?tab=free&free_page=1" class="page-link">1</a>
+        </li>
+        {% if free_users.number > 5 %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+        {% endif %}
+    {% endif %}
+    {% for num in free_users.paginator.page_range %}
+        {% if num == free_users.number %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+        {% elif num > free_users.number|add:"-3" and num < free_users.number|add:"3" %}
+            <li class="page-item">
+                <a href="?tab=free&free_page={{ num }}" class="page-link">{{ num }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    {% if free_users.number < free_users.paginator.num_pages|add:"-3" %}
+        {% if free_users.number < free_users.paginator.num_pages|add:"-4" %}
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+        {% endif %}
+        <li class="page-item">
+            <a href="?tab=free&free_page={{ free_users.paginator.num_pages }}" class="page-link">{{ free_users.paginator.num_pages }}</a>
+        </li>
+    {% endif %}
+{% endif %}
+
+{% if free_users.has_next %}
+    <li class="page-item">
+        <a href="?tab=free&free_page={{ free_users.next_page_number }}" class="page-link">
+            <i class="mdi mdi-chevron-right"></i>
+        </a>
+    </li>
+{% else %}
+    <li class="page-item disabled">
+        <span class="page-link">
+            <i class="mdi mdi-chevron-right"></i>
+        </span>
+    </li>
+{% endif %}
+
+</ul>
+
+</div>
+
+
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+            <!-- New "Referral" tab content -->
+            <div class="tab-pane fade {% if tab == 'referral' %}show active{% endif %}" id="referral-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Referral Links</h5>
+                        <div class="table-responsive">
+                            <table class="table align-middle table-nowrap table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Order ID</th>
+                                        <th scope="col">Date Generated</th>
+                                        <th scope="col">Clicks</th>
+                                        <th scope="col">Link Code</th>
+                                        <th scope="col">Referral Pattern</th>
+                                        <th scope="col">User ID</th>
+                                        <th scope="col">User Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for referral_link in referral_links %}
+                                        <tr>
+                                            <td>{{ referral_link.order_id }}</td>
+                                            <td>{{ referral_link.date_generated }}</td>
+                                            <td>{{ referral_link.clicks }}</td>
+                                          <td>https://{{ referral_link.link_code|cut:'http://' }}</td>
+
+                                            <td>{{ referral_link.referral_pattern }}</td>
+                                            <td>{{ referral_link.user_id }}</td>
+                                            <td>{{ referral_link.user_email }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7">No referral links found.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    <!-- Pagination for "Referral" tab -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="pagination pagination-rounded justify-content-center mt-4">
+                                {% if referral_links.has_previous %}
+                                    <li class="page-item">
+                                        <a href="?tab=referral&referral_page={{ referral_links.previous_page_number }}" class="page-link">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+
+                                {% if referral_links.paginator.num_pages > 1 %}
+                                    {% if referral_links.number > 3 %}
+                                        <li class="page-item">
+                                            <a href="?tab=referral&referral_page=1" class="page-link">1</a>
+                                        </li>
+                                        {% if referral_links.number > 4 %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% for num in referral_links.paginator.page_range %}
+                                        {% if num == referral_links.number %}
+                                            <li class="page-item active">
+                                                <span class="page-link">{{ num }}</span>
+                                            </li>
+                                        {% elif num > referral_links.number|add:"-3" and num < referral_links.number|add:"3" %}
+                                            <li class="page-item">
+                                                <a href="?tab=referral&referral_page={{ num }}" class="page-link">{{ num }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if referral_links.number < referral_links.paginator.num_pages|add:"-3" %}
+                                        {% if referral_links.number < referral_links.paginator.num_pages|add:"-4" %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        {% endif %}
+                                        <li class="page-item">
+                                            <a href="?tab=referral&referral_page={{ referral_links.paginator.num_pages }}" class="page-link">{{ referral_links.paginator.num_pages }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if referral_links.has_next %}
+                                    <li class="page-item">
+                                        <a href="?tab=referral&referral_page={{ referral_links.next_page_number }}" class="page-link">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- End Pagination for "Referral" tab -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-form">
+        <h2>Create Notification</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="sender_role">Sender Role:</label>
+                <select id="sender_role" name="sender_role" class="form-control">
+                    <option value="Administrator">Administrator</option>
+                    <option value="Leader">Leader</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" class="form-control" rows="4"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Create Notification</button>
+        </form>
+    </div>
+<span class="placeholder col-12 placeholder-xs"></span>
+
+<div class="email-form">
+    <h2>Send Email</h2>
+    <form id="email-form" method="post" action="{% url 'send_email_async' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="recipient_emails">Recipient Emails:</label>
+            <input type="text" id="recipient_emails" name="recipient_emails" class="form-control">
+        </div>
+
+        <button type="button" id="submit-button" class="btn btn-primary">Send Email</button>
+    </form>
+</div>
+<span class="placeholder col-12 placeholder-xs"></span>
+<br>
+
+<div class="keyword-upload-form">
+    <h2>Upload Bulk Keywords</h2>
+    <form id="keyword-upload-form" method="post" enctype="multipart/form-data" action="{% url 'posts:fetch_search_results' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="bulk_keywords_file">Bulk Keywords File: </label>
+            <input type="file" id="bulk_keywords_file" name="bulk_keywords_file" class="form-control-file" accept=".xlsx, .xls" required>
+              <button type="submit" id="submit-button" class="btn btn-primary">Upload Keywords</button>
+        </div>
+       <div class="space" style="height:40px;"></div>
+    </form>
+
+    <div class="keyword-list">
+        <h2>Uploaded Keywords</h2>
+        <table class="table" id="keyword-table">
+            <thead>
+                <tr>
+                    <th>Keyword</th>
+                    <th>Additional Keyword</th>
+                    <th>Filter</th>
+                    <th>Language</th>
+                </tr>
+            </thead>
+            <tbody id="keyword-table-body">
+                <!-- Add keywords dynamically using JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <form id="keyword-form" action="{% url 'posts:fetch_search_results' %}" method="post">
+        {% csrf_token %}
+        <!-- Hidden input fields for keywords -->
+        <!-- These will be populated dynamically with JavaScript -->
+        <input type="hidden" name="keyword[]" value="">
+        <input type="hidden" name="additionalKeyword[]" value="">
+        <input type="hidden" name="filter[]" value="">
+        <input type="hidden" name="language[]" value="">
+        <!-- Add other hidden input fields for additional data if needed -->
+        <button id="generate-pages-button" class="btn btn-success" type="submit">Generate Pages</button>
+    </form>
+    
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+<script>
+ 
+  
+ 
+
+  document.getElementById('keyword-upload-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+        
+        // Clear existing table rows
+        var tableBody = document.getElementById('keyword-table-body');
+        tableBody.innerHTML = '';
+        
+        // Get the uploaded file
+        var file = document.getElementById('bulk_keywords_file').files[0];
+        
+        // Read the file
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var data = new Uint8Array(event.target.result);
+            var workbook = XLSX.read(data, {type: 'array'});
+            var sheet = workbook.Sheets[workbook.SheetNames[0]];
+            var rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
+            
+            // Iterate over rows to populate the table
+            rows.forEach(function(row) {
+                var keyword = row[0];
+                var additionalKeyword = row[1] || '';
+                var filter = row[2];
+                var language = row[3] || ''; // Language column
+                
+                // Create table row and cells
+                var newRow = document.createElement('tr');
+                var keywordCell = document.createElement('td');
+                var additionalKeywordCell = document.createElement('td');
+                var filterCell = document.createElement('td');
+                var languageCell = document.createElement('td');
+
+                // Populate cell contents
+                keywordCell.textContent = keyword;
+                additionalKeywordCell.textContent = additionalKeyword;
+                filterCell.textContent = filter;
+                languageCell.textContent = language;
+
+                // Append cells to the row
+                newRow.appendChild(keywordCell);
+                newRow.appendChild(additionalKeywordCell);
+                newRow.appendChild(filterCell);
+                newRow.appendChild(languageCell);
+
+                // Append the row to the table
+                tableBody.appendChild(newRow);
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+ document.getElementById('generate-pages-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default button action
+        
+        // Gather data from all rows of the table
+        var tableRows = document.querySelectorAll('#keyword-table-body tr');
+        var requestData = {
+            keywords: [],
+            additionalKeywords: [],
+            filters: [],
+            languages: []
+        };
+
+        // Iterate over each row and populate requestData
+        tableRows.forEach(function(row) {
+            var keyword = row.cells[0].textContent.trim();
+            var additionalKeyword = row.cells[1].textContent.trim();
+            var filter = row.cells[2].textContent.trim();
+            var language = row.cells[3].textContent.trim();
+            
+            // Push data into respective arrays
+            requestData.keywords.push(keyword);
+            requestData.additionalKeywords.push(additionalKeyword);
+            requestData.filters.push(filter);
+            requestData.languages.push(language);
+        });
+        
+        console.log('Request Data:', requestData);
+        console.log('Request Body:', JSON.stringify(requestData));
+
+        // Send the data via AJAX
+        fetch('{% url "posts:fetch_search_results" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ requestData: requestData }) 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response from the Django view
+            console.log('Response Data:', data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+        alert("Started creating pages in the background.");
+    });
+
+
+</script>
+
+    </div>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('submit-button').addEventListener('click', async function() {
+            const form = document.getElementById('email-form');
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Emails are being sent in the background!');
+                    window.location.href = "{% url 'user_dashboard' %}";  // Redirect to the dashboard page
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+</script>
+
+
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the current tab from the URL
+        let urlParams = new URLSearchParams(window.location.search);
+        let tab = urlParams.get("tab");
+        if (!tab) {
+            tab = "users"; // Default to users tab if tab parameter is not set
+        }
+
+        // Activate the correct tab
+        let tabLinks = document.querySelectorAll(".nav-link");
+        tabLinks.forEach(function(link) {
+            if (link.getAttribute("href") === `#${tab}-tab`) {
+                link.classList.add("active");
+                let target = link.getAttribute("href");
+                document.querySelector(target).classList.add("show", "active");
+            }
+        });
+    });
+    
+    
+
+
+    </script>
+    
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Get the sortable header cells
+  let sortableHeaders = document.querySelectorAll(".sortable");
+
+  // Add click event listener to each sortable header cell
+  sortableHeaders.forEach(function(header) {
+    header.addEventListener("click", function() {
+      // Get the table body element
+      let tableBody = header.closest("table").querySelector("tbody");
+
+      // Get the index of the clicked column
+      let columnIndex = Array.prototype.indexOf.call(header.parentNode.children, header);
+
+      // Get the rows in the table body
+      let rows = Array.from(tableBody.children);
+
+      // Sort the rows based on the data in the clicked column
+      rows.sort(function(a, b) {
+        let aValue = a.children[columnIndex].textContent.trim();
+        let bValue = b.children[columnIndex].textContent.trim();
+
+        // Convert the values to numbers if they are numeric
+        if (!isNaN(Number(aValue)) && !isNaN(Number(bValue))) {
+          aValue = Number(aValue);
+          bValue = Number(bValue);
+        }
+
+        // Compare the values for sorting
+        return aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: "base" });
+      });
+
+      // Clear the table body
+      while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+      }
+
+      // Append the sorted rows back to the table body
+      rows.forEach(function(row) {
+        tableBody.appendChild(row);
+      });
+    });
+  });
+});
+</script>
+
+
+
+{% endblock %}

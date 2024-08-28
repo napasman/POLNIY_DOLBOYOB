@@ -1,0 +1,7 @@
+x
+exit
+*exit
+
+^Xtail
+tail -f django.log
+

@@ -1,0 +1,14 @@
+nohup: ignoring input
+[2023-07-16 13:18:37 +0000] [2813754] [INFO] Starting gunicorn 20.1.0
+[2023-07-16 13:18:37 +0000] [2813754] [INFO] Listening at: unix:/home/ubuntu/env/GrimBlog/blog.sock (2813754)
+[2023-07-16 13:18:37 +0000] [2813754] [INFO] Using worker: sync
+[2023-07-16 13:18:37 +0000] [2813756] [INFO] Booting worker with pid: 2813756
+[2023-07-16 13:18:37 +0000] [2813757] [INFO] Booting worker with pid: 2813757
+[2023-07-16 13:18:37 +0000] [2813758] [INFO] Booting worker with pid: 2813758
+[2023-07-16 15:18:55 +0200] [2813756] [INFO] Worker exiting (pid: 2813756)
+[2023-07-16 13:18:55 +0000] [2813754] [INFO] Handling signal: term
+[2023-07-16 15:18:55 +0200] [2813758] [INFO] Worker exiting (pid: 2813758)
+[2023-07-16 15:18:55 +0200] [2813757] [INFO] Worker exiting (pid: 2813757)
+[2023-07-16 13:18:55 +0000] [2813754] [WARNING] Worker with pid 2813757 was terminated due to signal 15
+[2023-07-16 13:18:55 +0000] [2813754] [WARNING] Worker with pid 2813758 was terminated due to signal 15
+[2023-07-16 13:18:55 +0000] [2813754] [INFO] Shutting down: Master

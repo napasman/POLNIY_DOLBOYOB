@@ -1,0 +1,915 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<link rel="canonical" href="{% url 'posts:blog' %}">
+
+ 
+<div class="position-relative">
+  <div class="shape shape-bottom shape-fluid-x text-light">
+    <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z"
+        fill="currentColor"
+      />
+    </svg>
+  </div>
+</div>
+
+<br><br>
+
+<!-- SEARCH -->
+<section class="mt-n6">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+
+        <!-- Form -->
+        <form id="blogSearchForm" class="rounded shadow mb-4" action="{% url 'posts:search_posts' %}" method="get">
+          <div class="input-group input-group-lg">
+
+            <!-- Text -->
+            <span class="input-group-text border-0 pe-1">
+              <i class="fe fe-search"></i>
+            </span>
+
+            <!-- Input -->
+            <input class="form-control border-0 px-1" type="text" name="q" aria-label="Search our blog..." placeholder="Search our blog...">
+
+            <!-- Text -->
+            <span class="input-group-text border-0 py-0 ps-1 pe-3">
+              <button type="submit" class="btn btn-sm btn-primary">
+                Search
+              </button>
+            </span>
+
+          </div>
+        </form>
+<style>
+  /* Your styles.css or a similar file */
+
+/* Badge styles */
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+/* Rounded-pill styles */
+.rounded-pill {
+  border-radius: 50rem; /* A large value to make it look like a pill */
+}
+
+/* Text color for secondary subtle background */
+.text-bg-secondary-subtle {
+  color: #555; /* Adjust the color to match your design */
+  background-color: #e7ebf2; /* Adjust the background color to match your design */
+}
+
+</style>
+        <!-- Badges -->
+        <div class="row align-items-center">
+          <div class="col-auto">
+
+            <!-- Heading -->
+            <h6 class="fw-bold text-uppercase text-body-secondary mb-0">
+              Tags:
+            </h6>
+
+          </div>
+          <div class="col ms-n5">
+
+            {% for tag in tags %}
+            <a class="badge rounded-pill text-bg-secondary-subtle" href="{% url 'posts:search_posts' %}?q={{ tag.name }}">
+              <span class="h6 text-uppercase">{{ tag.name }}</span>
+            </a>
+          {% endfor %}
+          
+
+
+          </div>
+        </div> <!-- / .row -->
+
+      </div>
+    </div> <!-- / .row -->
+  </div>
+</section>
+
+
+{% if featured %}
+<!-- ARTICLES -->
+<section class="pt-7 pt-md-10">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <!-- Card -->
+        <div class="card card-row shadow-light-lg mb-6 lift lift-lg">
+          <div class="row gx-0">
+            <div class="col-12">
+              <!-- Badge -->
+              <span
+                class="badge rounded-pill bg-light badge-float badge-float-inside"
+              >
+                <span class="h6 text-uppercase">Featured</span>
+              </span>
+            </div>
+            <a
+              class="col-12 col-md-6 order-md-2 bg-cover card-img-end"
+              style="background-image: url(assets/img/photos/photo-27.jpg)"
+              href="{% url 'posts:blogpost' featured.slug %}"
+            >
+              <!-- Image (placeholder) -->
+              <img
+                src="{{featured.heading_image.url}}"
+                alt="..."
+                class="img-fluid w-100"
+              />
+
+              <!-- Shape -->
+              <div
+                class="shape shape-start shape-fluid-y text-white d-none d-md-block"
+              >
+                <svg
+                  viewBox="0 0 112 690"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h62.759v172C38.62 384 112 517 112 517v173H0V0z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </a>
+            <div class="col-12 col-md-6 order-md-1">
+              <!-- Body -->
+              <a
+                class="card-body"
+                href="{% url 'posts:blogpost' featured.slug %}"
+              >
+                <!-- Heading -->
+                <h3>{{featured.title}}</h3>
+
+                <!-- Text -->
+                <p class="mb-0 text-muted">{{featured.short_description}}</p>
+              </a>
+
+              <!-- Meta -->
+              <a
+                class="card-meta"
+                href="{% url 'posts:blogpost' featured.slug %}"
+              >
+                <!-- Divider -->
+                <hr class="card-meta-divider" />
+
+                <!-- Avatar -->
+                <div class="avatar avatar-lg me-2">
+                  <img
+                    src="{{featured.author.get_photo_url}}"
+                    alt="..."
+                    class="avatar-img rounded-circle"
+                  />
+                </div>
+
+                
+            <div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">{{role}}, level {{level}}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted" datetime="2019-05-20">
+                <p style="text-align:right; margin-bottom: 0px;">Published on {{featured.publish_on|date:'M d, Y'}}</p>
+              </time>
+            </div>
+              </a>
+            </div>
+          </div>
+          <!-- / .row -->
+        </div>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+{% endif %}
+
+{% if latest %}
+<!-- ARTICLES -->
+<section class="pt-7 pt-md-10">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-12 col-md">
+        <!-- Heading -->
+        <h3 class="mb-0">Latest Stories</h3>
+
+        <!-- Text -->
+        <p class="mb-0 text-muted">Here’s what we've been up to recently.</p>
+      </div>
+      <div class="col-12 col-md-auto">
+        <!-- Button -->
+        <a href="{% url 'posts:latest_posts'%}" class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">
+          View all
+        </a>
+      </div>
+    </div>
+    <!-- / .row -->
+    <div class="row">
+      {% for post in latest %}
+      <!-- latest posts -->
+      <div class="col-12 col-md-6 col-lg-4 d-flex">
+        <!-- Card -->
+        <div class="card mb-6 mb-lg-0 shadow-light-lg lift lift-lg">
+          <!-- Image -->
+          <a class="card-img-top" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Image -->
+            <img
+              src="{{post.heading_image.url}}"
+              alt="..."
+              class="card-img-top"
+            />
+
+            <!-- Shape -->
+            <div class="position-relative">
+              <div class="shape shape-bottom shape-fluid-x text-white">
+                <svg
+                  viewBox="0 0 2880 480"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Body -->
+          <a class="card-body" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Heading -->
+            <h3>{{post.title}}</h3>
+
+            <!-- Text -->
+            <p class="mb-0 text-muted">{{post.short_description}}</p>
+          </a>
+
+          <!-- Meta -->
+          <a
+            class="card-meta mt-auto"
+            href="{% url 'posts:blogpost' post.slug %}"
+          >
+            <!-- Divider -->
+            <hr class="card-meta-divider" />
+
+            <!-- Avatar -->
+            <div class="avatar avatar-sm me-2">
+              <img
+                src="{{post.author.get_photo_url}}"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </div>
+
+           <div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">{{role}}, level {{level}}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted" datetime="2019-05-20">
+                <p style="text-align:right; margin-bottom: 0px;">Published on {{post.publish_on|date:'M d, Y'}}</p>
+              </time>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+     
+</section>
+{% endif %}
+
+{% if case_studies %}
+<!-- ARTICLES -->
+<section class="pt-7 pt-md-10">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-12 col-md">
+        <!-- Heading -->
+        <h3 class="mb-0">Case Studies</h3>
+
+        <!-- Text -->
+        <p class="mb-0 text-muted">In-depth looks at our work.</p>
+      </div>
+      <div class="col-12 col-md-auto">
+        <!-- Button -->
+        <a href="{% url 'posts:case_studies'%}" class="btn btn-sm btn-outline-gray-300 d-none d-md-inline">
+          View all
+        </a>
+      </div>
+    </div>
+    <!-- / .row -->
+    <div class="row">
+      <div class="col-12">
+        <!-- Card -->
+        <div class="card card-row shadow-light-lg mb-6">
+          <div class="row gx-0">
+            <div class="col-12 col-md-6">
+              <!-- Slider -->
+
+              <div
+                class="card-img-slider"
+                data-flickity='{"fade": true, "imagesLoaded": true, "pageDots": false, "prevNextButtons": false, "asNavFor": "#blogSlider", "draggable": false}'
+              >
+                {% for post in case_studies %}
+                <a class="card-img-start w-100 bg-cover"  href="{% url 'posts:blogpost' post.slug %}">
+                  <!-- Image (placeholder) -->
+                  <img
+                    src="{{post.heading_image.url}}"
+                    alt="..."
+                    class="img-fluid"
+                  />
+                </a>
+                {% endfor %}
+              </div>
+
+              <!-- Shape -->
+              <div
+                class="shape shape-end shape-fluid-y text-white d-none d-md-block"
+              >
+                <svg
+                  viewBox="0 0 112 690"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M116 0H51v172C76 384 0 517 0 517v173h116V0z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 position-static">
+              <!-- Slider -->
+              <div
+                class="position-static"
+                data-flickity='{"wrapAround": true, "pageDots": false, "imagesLoaded": true, "adaptiveHeight": true}'
+                id="blogSlider"
+              >
+                {% for post in case_studies %}
+                <div class="w-100">
+                  <!-- Body -->
+                  <a
+                    class="card-body"
+                    href="{% url 'posts:blogpost' post.slug%}"
+                  >
+                    <!-- Heading -->
+                    <h3>{{post.title}}</h3>
+
+                    <!-- Text -->
+                    <p class="mb-0 text-muted">{{post.short_description}}</p>
+                  </a>
+
+                  <!-- Meta -->
+                  <a
+                    class="card-meta mt-auto"
+                    href="{% url 'posts:blogpost' post.slug%}"
+                  >
+                    <!-- Divider -->
+                    <hr class="card-meta-divider" />
+
+                    <!-- Avatar -->
+                    <div class="avatar avatar-lg me-2">
+                      <img
+                      src="{{post.author.get_photo_url}}"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                      />
+                    </div>
+
+                   
+            <div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">{{role}}, level {{level}}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted" datetime="2019-05-20">
+                <p style="text-align:right; margin-bottom: 0px;">Published on {{post.publish_on|date:'M d, Y'}}</p>
+              </time>
+            </div>
+                  </a>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- / .row -->
+        </div>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+{% endif %}
+
+{% if popular_stories_top %}
+<!-- ARTICLES -->
+<section class="pt-7 pt-md-10">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <!-- Heading -->
+        <h3 class="mb-0">Popular Stories</h3>
+
+        <!-- Text -->
+        <p class="mb-5 text-muted">Here’s what’s big in the past week!</p>
+      </div>
+    </div>
+    <!-- / .row -->
+    <div class="row">
+      {% for post in popular_stories_top %}
+      <div class="col-12 col-md-6 d-flex">
+        <!-- Card -->
+        <div class="card mb-6 shadow-light-lg lift lift-lg">
+          <!-- Image -->
+          <a class="card-img-top" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Image -->
+            <img
+              src="{{post.heading_image.url}}"
+              alt="..."
+              class="card-img-top"
+            />
+
+            <!-- Shape -->
+            <div class="position-relative">
+              <div class="shape shape-bottom shape-fluid-x text-white">
+                <svg
+                  viewBox="0 0 2880 480"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Body -->
+          <a class="card-body" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Heading -->
+            <h3>{{post.title}}</h3>
+
+            <!-- Text -->
+            <p class="mb-0 text-muted">{{post.short_description}}</p>
+          </a>
+
+          <!-- Meta -->
+          <a
+            class="card-meta mt-auto"
+            href="{% url 'posts:blogpost' post.slug %}"
+          >
+            <!-- Divider -->
+            <hr class="card-meta-divider" />
+
+            <!-- Avatar -->
+            <div class="avatar avatar-lg me-2">
+              <img
+              src="{{post.author.get_photo_url}}"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </div>
+
+            <div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">{{role}}, level {{level}}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted" datetime="2019-05-20">
+                <p style="text-align:right; margin-bottom: 0px;">Published on {{post.publish_on|date:'M d, Y'}}</p>
+              </time>
+            </div>
+
+          </a>
+        </div>
+      </div>
+      {% endfor %} {% for post in popular_posts%}
+      <div class="col-12 col-md-6 col-lg-4 d-flex">
+        <!-- Card -->
+        <div class="card mb-6 mb-lg-0 shadow-light-lg lift lift-lg">
+          <!-- Image -->
+          <a class="card-img-top" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Image -->
+            <img
+              src="{{post.heading_image.url}}"
+              alt="..."
+              class="card-img-top"
+            />
+
+            <!-- Shape -->
+            <div class="position-relative">
+              <div class="shape shape-bottom shape-fluid-x text-white">
+                <svg
+                  viewBox="0 0 2880 480"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </a>
+
+          <!-- Body -->
+          <a class="card-body" href="{% url 'posts:blogpost' post.slug %}">
+            <!-- Heading -->
+            <h3>{{post.title}}</h3>
+
+            <!-- Text -->
+            <p class="mb-0 text-muted">{{post.short_description}}</p>
+          </a>
+
+          <!-- Meta -->
+          <a
+            class="card-meta mt-auto"
+            href="{% url 'posts:blogpost' post.slug %}"
+          >
+            <!-- Divider -->
+            <hr class="card-meta-divider" />
+
+            <!-- Avatar -->
+            <div class="avatar avatar-sm me-2">
+              <img
+              src="{{post.author.get_photo_url}}"
+                alt="..."
+                class="avatar-img rounded-circle"
+              />
+            </div>
+<div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">{{role}}, level {{level}}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted" datetime="2019-05-20">
+                <p style="text-align:right; margin-bottom: 0px;">Published on {{post.publish_on|date:'M d, Y'}}</p>
+              </time>
+            </div>
+          </a>
+        </div>
+      </div>
+      {%endfor%}
+      <div class="col-12 col-md-6 col-lg-4 d-flex" id="load-more-container"></div>
+      
+    <div id="popular-posts-container">
+
+    </div>
+    <!-- / .row -->
+  </div>
+
+  
+  <!-- / .container -->
+</section>
+{% endif %}
+
+
+
+
+<!-- MORE -->
+<section class="py-7 py-md-10">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-9 col-lg-8 col-xl-7 load-more-container">
+        <!-- Button -->
+
+<button id="load-more-btn" class="btn w-100 btn-outline-gray-300 d-flex align-items-center">
+  <span class="mx-auto">Load more</span>
+  <i class="fe fe-arrow-right"></i>
+</button>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+
+<!-- SHAPE -->
+<div class="position-relative">
+  <div class="shape shape-bottom shape-fluid-x text-gray-200">
+    <svg viewBox="0 0 2880 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M0 48h2880V0h-720C1442.5 52 720 0 720 0H0v48z"
+        fill="currentColor"
+      />
+    </svg>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="pt-6 pt-md-8 bg-gray-200">
+  <div class="container pb-6 pb-md-8 border-bottom border-gray-300">
+    <div class="row align-items-center">
+      <div class="col-12 col-md">
+        <!-- Heading -->
+        <h3 class="mb-1 fw-bold">Get our stories delivered</h3>
+
+        <!-- Text -->
+        <p class="fs-lg text-muted mb-6 mb-md-0">
+          From us to your inbox weekly.
+        </p>
+      </div>
+      <div class="col-12 col-md-5">
+        <!-- Form -->
+        <form method="POST" action="{% url 'posts:subscribe' %}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col">
+              <!-- Input -->
+              {{subscribeForm.email}}
+            </div>
+            <div class="col-auto ms-n5">
+              <!-- Button -->
+              <button class="btn btn-primary" type="submit">Subscribe</button>
+            </div>
+          </div>
+          <!-- / .row -->
+        </form>
+      </div>
+    </div>
+    <!-- / .row -->
+  </div>
+  <!-- / .container -->
+</section>
+<style>
+    .TeletegLogo2, .ul{
+         display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+    }
+    
+    ul.list-unstyled.list-inline.list-social.mb-6.mb-md-0{
+        text-align: center;
+    }
+    .bx{
+        color: gray;
+    }
+</style>
+
+<footer class="py-8 py-md-11 bg-gray-200">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-3">
+        <!-- Brand -->
+              <a href="{% url 'posts:index' %}">
+    <img src="{% static 'assets/img/TeletegLogo.png' %}" class="TeletegLogo2" alt="..." class="footer-brand img-fluid mb-2" />
+</a>
+
+        <!-- Text 
+        <p class="text-gray-700 mb-2">A better way to build.</p>-->
+
+        <ul class="list-unstyled list-inline list-social mb-6 mb-md-0">
+
+
+          <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+              <!-- YouTube -->
+          <!-- Home Icon for Testing -->
+          <li class="list-inline-item list-social-item me-3">
+            <a href="https://youtube.com/@Teleteg" class="text-decoration-none">
+                <i class="bx bxl-youtube"></i>
+            </a>
+          </li>
+
+        <!-- TikTok -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.tiktok.com/@teleteg" class="text-decoration-none">
+              <i class="bx bxl-tiktok"></i>
+            </a>
+        </li>
+        
+                <!-- Instagram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.instagram.com/teleteg/" class="text-decoration-none">
+              <i class="bx bxl-instagram-alt"></i>
+            </a>
+        </li>
+
+
+        <!-- Telegram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://t.me/teletegch" class="text-decoration-none">
+              <i class="bx bxl-telegram"></i>
+            </a>
+        </li>
+        
+        <!-- Twitter -->
+        <li class="list-inline-item list-social-item ">
+            <a href="https://twitter.com/teletegofficial" class="text-decoration-none">
+              <i class="bx bxl-twitter"></i>
+            </a>
+        </li>
+    </ul>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">MENU</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+            <a href="{% url 'posts:pricing' %}" class="text-reset"> Pricing </a>
+          </li>
+           {% if  user.is_authenticated %}
+          <li class="mb-3">
+            <a href="{% url 'user_dashboard' %}" class="text-reset"> Dashboard </a>
+          </li>
+
+          {% endif %}
+          <li class="mb-3">
+            <a href="{% url 'posts:blog' %}" class="text-reset">Blog </a>
+          </li>
+          {% if not user.is_authenticated %}
+                <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signin' %}" class="text-reset"> Login </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signup' %}" class="text-reset"> Sign Up </a>
+          </li>
+     
+          {% else %}
+          
+          <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'posts:logout' %}" class="text-reset"> Logout </a>
+          </li>
+           {% endif %}
+           
+        </ul>
+      </div>
+      
+   <div class="col-6 col-md-4 col-lg-3">
+    <!-- Heading -->
+    <div class="d-flex align-items-center">
+        <h6 class="fw-bold text-uppercase text-gray-700" style="white-space: nowrap;">Popular Search Terms</h6>
+    </div>
+    
+    <!-- List with custom CSS -->
+   <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_groups_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Groups </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_channels_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Channels </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_members_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Members </a>
+        </li>
+        <li>
+            <a href="{% url 'posts:telegram_admins_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Admins </a>
+        </li>
+        <!-- Add more links as needed -->
+    </ul>
+</div>
+<div class="col-6 col-md-4 col-lg-3">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">Specials</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+             <a href="{% url 'posts:marketplace' %}" class="text-reset" style="white-space: nowrap;">Marketplace </a>
+          </li>
+   
+          <li class="mb-3">
+            <a href="https://teleteg.com/blogs/telegram-search-tools-and-metrics#referral-program" class="text-reset" style="white-space: nowrap;">Referral Program </a>
+          </li>
+                    <li class="mb-3">
+            <a href="https://t.me/teleteg_support" class="text-reset" style="white-space: nowrap;">Tech Support </a>
+          </li>
+          <li >
+            <a href="{% url 'posts:help_center' %}" class="text-reset"> Help center </a>
+          </li>
+          
+           
+        </ul>
+      </div>
+
+      
+    </div>
+    <!-- / .row -->
+  </div>
+
+  <!-- / .container -->
+</footer>
+<script>
+  let offset = 0;
+ 
+ function loadMorePopularPosts() {
+     const container = document.getElementById('popular-posts-container');
+     const loadMoreBtn = document.getElementById('load-more-btn');
+     const loadMoreContainer = document.querySelector('.load-more-container');
+ 
+     fetch(`/load-more-popular-posts/${offset}/`)
+         .then(response => response.json())
+         .then(data => {
+             if (data.length > 0) {
+                 // Create section and row
+                 const sectionElement = document.createElement('section');
+                 sectionElement.className = 'pt-7 pt-md-10';
+                 const rowElement = document.createElement('div');
+                 rowElement.className = 'row';
+ 
+                 data.forEach(post => {
+                     // Create post container
+                     const postElement = document.createElement('div');
+                     postElement.className = 'col-12 col-md-6 col-lg-4 d-flex';
+ 
+                     // Create card structure
+                     postElement.innerHTML = `
+                         <div class="card mb-6 mb-lg-0 shadow-light-lg lift lift-lg">
+                          <a class="card-img-top"  href="/blogs/${post.slug}">
+                                 <img src="${post.heading_image}" alt="..." class="card-img-top"/>
+                                 <div class="position-relative">
+                                     <div class="shape shape-bottom shape-fluid-x text-white">
+                                         <svg viewBox="0 0 2880 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M2160 0C1440 240 720 240 720 240H0v240h2880V0h-720z" fill="currentColor"/>
+                                         </svg>
+                                     </div>
+                                 </div>
+                             </a>
+                             <a class="card-body" href="/blogs/${post.slug}">
+                                 <h3>${post.title}</h3>
+                                 <p class="mb-0 text-muted">${post.short_description}</p>
+                             </a>
+                             <a class="card-meta mt-auto" href="/blogs/${post.slug}">
+                                 <hr class="card-meta-divider"/>
+                                 <div class="avatar avatar-sm me-2">
+                                     <img src="/media/profile_pictures/defaultProfile.jpg" alt="..." class="avatar-img rounded-circle"/>
+                                 </div>
+                             
+
+            
+            <div class="col ms-n5 mt-auto">
+              <!-- Name -->
+              <h6 style="text-align:right; margin-bottom: 3px;" class="text-uppercase">${post.role}, level ${post.level}</h6>
+  
+              <!-- Date -->
+              <time class="fs-sm text-muted"datetime="${post.publish_on}">
+                <p style="text-align:right; margin-bottom: 0px;">Published on  ${new Date(post.publish_on).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+              </time>
+            </div>
+                                 
+                             </a>
+                         </div>
+                     `;
+ 
+                     // Append post container to the row
+                     rowElement.appendChild(postElement);
+                 });
+ 
+                 // Append row to the section
+                 sectionElement.appendChild(rowElement);
+ 
+                 // Append section to the main container
+                 container.appendChild(sectionElement);
+ 
+                 offset += data.length;
+             } else {
+                 loadMoreBtn.style.display = 'none';  
+                 loadMoreContainer.style.display = 'none'; // Hide the button if no more posts
+             }
+         })
+         .catch(error => console.error('Error:', error));
+ }
+ offset = 5;  // Start from the 3rd post on the first page
+ loadMorePopularPosts();  // Initial load
+ 
+ const loadMoreBtn = document.getElementById('load-more-btn');
+ loadMoreBtn.addEventListener('click', loadMorePopularPosts);
+ 
+ </script>
+{% endblock content %}

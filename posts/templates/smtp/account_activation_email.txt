@@ -1,0 +1,14 @@
+Welcome to teleteg.com!
+
+You're almost ready to start using our services. Please activate your account by clicking the link below:
+
+https://teleteg.com{% url 'posts:activate' uidb64=uid token=token %}
+
+If you didn't request this, you can safely ignore this email.
+
+Thanks for choosing teleteg.com!
+
+Best regards,
+The teleteg.com Team
+To unsubscribe from future emails, please click the link below
+https://teleteg.com{% url 'posts:unsubscribe' uidb64=uid %}

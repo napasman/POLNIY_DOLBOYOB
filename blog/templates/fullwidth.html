@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load cms_tags  %}
+{% cms_toolbar %}
+
+{% block content %}
+    <div class="container">
+        {% placeholder "content" %}
+    </div>
+{% endblock %}

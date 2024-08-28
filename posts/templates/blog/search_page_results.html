@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="Themesbrand" name="author" />
+
+    <title>{{ heading }} | Results</title>
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon33.png' %}" />
+    
+    {% block css %} 
+    <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" id="bootstrap-style" rel="stylesheet" />
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/ion-rangeslider/css/ion.rangeSlider.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'libs/select2/dist/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static './assets/css/custom.css' %}" />
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+    {% endblock %}
+  
+  </head>
+
+  <body data-sidebar="dark">
+    <!-- Begin page -->
+    <div id="layout-wrapper" style="margin-top:-145px;">
+
+      
+      {% block sidebar %}
+      {% include 'authentication/partials/sidebarResults.html' %}
+      {% endblock %}
+      
+      <div class="main-content">  
+        <div class="page-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                  <h4 class="mb-sm-0 font-size-18">{{ heading }}</h4>
+                  <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                      <li class="breadcrumb-item">
+                        <a href="javascript: void(0);">{{ pageview }}</a>
+                      </li>
+                      <li class="breadcrumb-item active">{{ heading }}</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% block contents %}
+            {% endblock %}
+            
+          </div>
+          <!-- container-fluid -->
+        </div>
+
+  <div class="container">
+  <div class="row justify-content-start">
+    <div class="col-12">
+      <!-- Include the search page table -->
+      {% include "blog/search_page_table.html" %}
+    </div>
+  </div>
+        
+  <style>
+    .TeletegLogo2, .ul{
+         display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+    }
+    
+    ul.list-unstyled.list-inline.list-social.mb-6.mb-md-0{
+        text-align: center;
+    }
+    .bx{
+        color: gray;
+    }
+</style>
+
+<footer class="py-8 py-md-11 bg-gray-200">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-4 col-lg-3">
+        <!-- Brand -->
+              <a href="{% url 'posts:index' %}">
+    <img src="{% static 'assets/img/TeletegLogo.png' %}" class="TeletegLogo2" alt="..." class="footer-brand img-fluid mb-2" />
+</a>
+
+        <!-- Text 
+        <p class="text-gray-700 mb-2">A better way to build.</p>-->
+
+        <ul class="list-unstyled list-inline list-social mb-6 mb-md-0">
+
+
+          <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+              <!-- YouTube -->
+          <!-- Home Icon for Testing -->
+          <li class="list-inline-item list-social-item me-3">
+            <a href="https://youtube.com/@Teleteg" class="text-decoration-none">
+                <i class="bx bxl-youtube"></i>
+            </a>
+          </li>
+
+        <!-- TikTok -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.tiktok.com/@teleteg" class="text-decoration-none">
+              <i class="bx bxl-tiktok"></i>
+            </a>
+        </li>
+        
+                <!-- Instagram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://www.instagram.com/teleteg/" class="text-decoration-none">
+              <i class="bx bxl-instagram-alt"></i>
+            </a>
+        </li>
+
+
+        <!-- Telegram -->
+        <li class="list-inline-item list-social-item me-3">
+            <a href="https://t.me/teletegch" class="text-decoration-none">
+              <i class="bx bxl-telegram"></i>
+            </a>
+        </li>
+        
+        <!-- Twitter -->
+        <li class="list-inline-item list-social-item ">
+            <a href="https://twitter.com/teletegofficial" class="text-decoration-none">
+              <i class="bx bxl-twitter"></i>
+            </a>
+        </li>
+    </ul>
+      </div>
+      <div class="col-6 col-md-4 col-lg-2">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">MENU</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+            <a href="{% url 'posts:pricing' %}" class="text-reset"> Pricing </a>
+          </li>
+           {% if  user.is_authenticated %}
+          <li class="mb-3">
+            <a href="{% url 'user_dashboard' %}" class="text-reset"> Dashboard </a>
+          </li>
+
+          {% endif %}
+          <li class="mb-3">
+            <a href="{% url 'posts:blog' %}" class="text-reset">Blog </a>
+          </li>
+          {% if not user.is_authenticated %}
+                <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signin' %}" class="text-reset"> Login </a>
+          </li>
+          <li class="mb-3">
+            <a href="{% url 'posts:signup' %}" class="text-reset"> Sign Up </a>
+          </li>
+     
+          {% else %}
+          
+          <li class="mb-3">
+            <a href="https://teleteg.com/helpcenter/#contacts" class="text-reset"> Contacts </a>
+          </li>
+          
+          <li>
+            <a href="{% url 'posts:logout' %}" class="text-reset"> Logout </a>
+          </li>
+           {% endif %}
+           
+        </ul>
+      </div>
+      
+   <div class="col-6 col-md-4 col-lg-3">
+    <!-- Heading -->
+    <div class="d-flex align-items-center">
+        <h6 class="fw-bold text-uppercase text-gray-700" style="white-space: nowrap;">Popular Search Terms</h6>
+    </div>
+    
+    <!-- List with custom CSS -->
+   <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_groups_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Groups </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_channels_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Channels </a>
+        </li>
+        <li class="mb-3">
+            <a href="{% url 'posts:telegram_members_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Members </a>
+        </li>
+        <li>
+            <a href="{% url 'posts:telegram_admins_list' page=1 %}" class="text-reset" style="white-space: nowrap;">Telegram Admins </a>
+        </li>
+        <!-- Add more links as needed -->
+    </ul>
+</div>
+<div class="col-6 col-md-4 col-lg-3">
+        <!-- Heading -->
+        <h6 class="fw-bold text-uppercase text-gray-700">Specials</h6>
+
+        <!-- List -->
+        <ul class="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
+          <li class="mb-3">
+             <a href="{% url 'posts:marketplace' %}" class="text-reset" style="white-space: nowrap;">Marketplace </a>
+          </li>
+   
+          <li class="mb-3">
+            <a href="https://teleteg.com/blogs/telegram-search-tools-and-metrics#referral-program" class="text-reset" style="white-space: nowrap;">Referral Program </a>
+          </li>
+                    <li class="mb-3">
+            <a href="https://t.me/teleteg_support" class="text-reset" style="white-space: nowrap;">Tech Support </a>
+          </li>
+          <li >
+            <a href="{% url 'posts:help_center' %}" class="text-reset"> Help center </a>
+          </li>
+          
+           
+        </ul>
+      </div>
+
+
+    </div>
+    <!-- / .row -->
+  </div>
+
+  <!-- / .container -->
+</footer>
+      </div>
+      <!-- end main content -->
+    
+      {% block javascript %}
+      <!-- JAVASCRIPT -->
+      <script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+      <script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'libs/metismenu/dist/metisMenu.min.js' %}"></script>
+      <script src="{% static 'libs/simplebar/dist/simplebar.min.js' %}"></script>
+      <script src="{% static 'libs/node-waves/dist/waves.min.js' %}"></script>
+      <script src="{% static 'libs/select2/dist/js/select2.min.js' %}"></script>
+      <script src="{% static 'js/app.js' %}"></script>
+      {% endblock %}
+      
+      {% block extra_javascript %}
+      {% endblock %}
+      
+  </body>
+</html>

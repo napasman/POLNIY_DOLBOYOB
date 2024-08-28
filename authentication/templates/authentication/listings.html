@@ -1,0 +1,545 @@
+{% extends 'authentication/base.html' %}
+{% load static %}
+
+{% block contents %}
+<style>
+.editable-field {
+    display: inline-block;
+}
+
+.editable-field span {
+    display: inline-block;
+}
+
+.editable-field input {
+    display: inline-block;
+}
+
+</style>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+        
+            <div class="card-body">
+                <h2>My listings on Marketplace</h2>
+            <p class="card-text">
+
+                Here you can add your listings to marketplace.
+            </p>
+                <div class="row mb-2">
+                    <!-- Search box -->
+                     <div class="col-sm-4"></div>
+                    {% if request.user.is_superuser %}
+                    <!-- Add New Order button -->
+                    <div class="col-sm-8">
+                        <div class="text-sm-end">
+                            <!-- Specify data-bs-toggle and data-bs-target attributes to call the modal -->
+                            <button type="button" class="btn btn-success btn-rounded waves-effect waves-light mb-2 me-2"
+                                data-bs-toggle="modal" data-bs-target=".addOrderModal">
+                                <i class="mdi mdi-plus me-1"></i> Add New Listing
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Table to display orders -->
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap table-check">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="align-middle" style="width: 3%;">#</th>
+                                <th class="align-middle sortable" style="width: 3%;">Product Name</th>
+                                <th class="align-middle sortable" style="width: 3%;">Price</th>
+                                <th class="align-middle sortable" style="width: 3%;">Creation Date</th>
+                                <th class="align-middle sortable" style="width: 3%;">Seller Name</th>
+                                <th class="align-middle sortable" style="width: 3%;">Listing ID</th>
+                                <th class="align-middle" style="width: 3%;">View Details</th>
+                                {% if request.user.is_superuser %} <th class="align-middle" style="width: 3%;">Action
+                                </th> {% endif %}
+                                <th class="align-middle" style="width: 3%;"></th>
+                                <th class="align-middle" style="width: 73%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Iterate over Order objects -->
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>
+                                    <!-- Editable field for Listing ID -->
+                                    <div class="editable-field" data-field="productName" data-order-id="{{ order.id }}"
+                                        >
+                                        <span>{{ order.productName }}</span>
+                                        <input type="text" class="form-control d-none" value="{{ order.productName }}"
+                                            >
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="editable-field"   data-field="price" data-order-id="{{ order.id }}">
+                                        $<span>{{ order.price }}</span>
+                                        <input type="text" class="form-control d-none" value="{{ order.price }}">
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div data-field="date" data-order-id="{{ order.id }}">
+                                        <span>{{ order.date|date:"F d, Y" }}</span>
+                                        <input type="text" class="form-control d-none"
+                                            value="{{ order.date|date:"Y-m-d" }}">
+                                    </div>
+                                </td>
+                                <!-- Update HTML markup for the Price and Number of Accounts fields -->
+                                <td>
+                                    <div data-field="role" data-order-id="{{ order.id }}">
+                                        <span>{{ order.role }}</span>
+                                        <input type="text" class="form-control d-none" value="{{ order.role }}">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-body " data-field="order_number"
+                                        data-order-id="{{ order.id }}">
+                                        <span>{{ order.order_number }}</span>
+                                        <input type="text" class="form-control d-none" value="{{ order.order_number }}">
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm btn-rounded view-order-btn"
+                                        data-order-id="{{ order.id }}" data-bs-toggle="modal"
+                                        data-bs-target=".orderdetailsModal">
+                                        View Details
+                                    </button>
+                                </td>
+                                <td>
+                                    {% if request.user.is_superuser %}
+                                    <div class="d-flex gap-3">
+                                        <a href="javascript:void(0);" class="text-success edit-link" data-field="name"
+                                            data-order-id="{{ order.id }}"><i
+                                                class="mdi mdi-pencil font-size-18"></i></a>
+                                        <button style="display:none;" type="button"
+                                            class="btn btn-sm btn-primary save-btn" data-field="name"
+                                            data-order-id="{{ order.id }}"><i
+                                                class="mdi mdi-check font-size-18"></i></button>
+                                        <a href="{% url 'delete_order' order.id %}" class="text-danger"><i
+                                                class="mdi mdi-delete font-size-18"></i></a>
+                                    </div>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <!-- Pagination -->
+                <ul class="pagination pagination-rounded justify-content-end mb-2">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="javascript: void(0);" aria-label="Previous">
+                            <i class="mdi mdi-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
+                    <!-- Add pagination logic here -->
+                    <li class="page-item">
+                        <a class="page-link" href="javascript: void(0);" aria-label="Next">
+                            <i class="mdi mdi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New Order Modal -->
+<div class="modal fade addOrderModal" tabindex="-1" role="dialog" aria-labelledby="addOrderModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOrderModalLabel">Add New Listing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for adding a new order -->
+                <form id="addOrderForm">
+                    <div class="mb-3">
+                        <label for="numAccountsInput" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="numAccountsInput" name="numAccounts"
+                            placeholder="Enter product name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceInput" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="priceInput" name="price" placeholder="Enter price"
+                            required min="5">
+                        <small id="priceError" class="form-text text-danger"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">File</label>
+                        <input type="file" class="form-control" name="productFile" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tabDropdown" class="form-label">Select Tab</label>
+                        <select class="form-select" id="tabDropdown" name="selectedTab">
+                            <option selected disabled>Select a tab</option>
+                            <option value="accounts">Accounts</option>
+                            <option value="database">Databases</option>
+                        </select>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <span style="display: inline-block; margin-right: auto;">File will be sent to your email and your File Manager.</span>
+                <button type="button" class="btn btn-primary" id="saveNewOrderBtn">Save Listing</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var addOrderModal = new bootstrap.Modal(document.querySelector('.addOrderModal'));
+        var saveNewOrderBtn = document.getElementById('saveNewOrderBtn');
+        var addOrderForm = document.getElementById('addOrderForm');
+        var isSubmitting = false; // Flag to track if form is already being submitted
+
+        saveNewOrderBtn.addEventListener('click', function () {
+            // Check if form is already being submitted
+            if (isSubmitting) {
+                return; // Do nothing if form is already being submitted
+            }
+
+            var priceInput = document.getElementById('priceInput');
+            var priceError = document.getElementById('priceError');
+
+            // Validate price
+            if (parseInt(priceInput.value) < 5) {
+                priceError.textContent = 'Price must be $5 or greater.';
+                priceInput.classList.add('is-invalid'); // Add red border
+                return; // Exit function if price is invalid
+            } else {
+                priceError.textContent = ''; // Clear error message
+                priceInput.classList.remove('is-invalid'); // Remove red border if present
+            }
+
+            var formData = new FormData(addOrderForm);
+
+            // Set isSubmitting flag to true to prevent multiple submissions
+            isSubmitting = true;
+
+            fetch('/users/save_new_order/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Close the modal after successful submission
+                    addOrderModal.hide();
+                    window.location.reload(); // Refresh the page to reflect the new order
+                } else {
+                    throw new Error('Failed to save new order');
+                }
+            })
+            .catch(error => {
+                console.error('Error saving new order:', error);
+            })
+            .finally(() => {
+                // Reset isSubmitting flag to allow future submissions
+                isSubmitting = false;
+            });
+        });
+
+        // Add blur event listener to price input
+        var priceInput = document.getElementById('priceInput');
+        priceInput.addEventListener('blur', function () {
+            var priceError = document.getElementById('priceError');
+            if (parseInt(priceInput.value) < 5) {
+                priceError.textContent = 'Price must be $5 or greater.';
+                priceInput.classList.add('is-invalid'); // Add red border
+            } else {
+                priceError.textContent = ''; // Clear error message
+                priceInput.classList.remove('is-invalid'); // Remove red border if present
+            }
+        });
+    });
+</script>
+
+
+
+<div class="modal fade orderdetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderdetailsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderdetailsModalLabel">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">Listing ID: <span class="text-primary listing-id"></span></p>
+                <p class="mb-4">Seller Name: <span class="text-primary listing-name"></span></p>
+
+                <div class="table-responsive">
+                    <table class="table align-middle table-nowrap">
+                        <thead>
+                            <tr>
+                                <th class="align-middle" style="width: 3%;">Product Name</th>
+                                <th class="align-middle" style="width: 3%;">Price</th>
+                                <th class="align-middle" style="width: 73%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="product-details">
+                            <!-- Product details will be appended here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+           <div class="modal-footer">
+                                <span style="display: inline-block; margin-right: auto;">File will be sent to your email and your File Manager.</span>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- end modal -->
+
+<script>
+     // Function to extract CSRF token from cookie
+     function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Check if the cookie contains the name we're looking for
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function saveChanges(input, field, orderId) {
+        var newValue = input.value;
+
+        // Create a FormData object to send data
+        var formData = new FormData();
+        formData.append('order_id', orderId);
+        formData.append('field', field);
+        formData.append('new_value', newValue);
+
+        // Send a POST request to the update_order endpoint
+        fetch('/users/update_order/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken') // Include CSRF token in headers
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // If response is successful, parse JSON
+            } else {
+                throw new Error('Failed to update order');
+            }
+        })
+        .then(data => {
+            // Update UI or show success message
+            input.classList.add('d-none');
+            input.previousElementSibling.textContent = newValue;
+            input.previousElementSibling.classList.remove('d-none');
+        })
+        .catch(error => {
+            console.error('Error updating order:', error);
+        });
+    }
+
+    // Add click event listener to edit links
+    document.querySelectorAll('.edit-link').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            var orderId = link.dataset.orderId; // Get the order ID
+
+            // Toggle editing mode for all editable fields in the row
+            var editableFields = document.querySelectorAll('.editable-field[data-order-id="' + orderId + '"]');
+            editableFields.forEach(function (field) {
+                toggleEdit(field);
+            });
+        });
+    });
+
+    // Function to toggle editing mode for a field
+    // Function to toggle editing mode for a field
+    function toggleEdit(field) {
+        var inputField = field.querySelector('input');
+        var spanField = field.querySelector('span');
+
+        // If the input field is hidden, show it to enable editing
+        if (inputField.classList.contains('d-none')) {
+            // Toggle visibility of input and span fields
+            inputField.classList.remove('d-none');
+            spanField.classList.add('d-none');
+
+            // Focus on the input field
+            inputField.focus();
+            inputField.style.width = (spanField.offsetWidth + 200) + 'px';
+
+            // Add event listener to capture Enter keypress
+            inputField.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    var fieldId = field.dataset.field;
+                    var orderId = field.dataset.orderId;
+                    saveChanges(inputField, fieldId, orderId);
+
+                    // Toggle visibility of input and span fields
+                    inputField.classList.add('d-none');
+                    spanField.classList.remove('d-none');
+                }
+            });
+        } else {
+            // If the input field is visible, save the changes
+            var fieldId = field.dataset.field;
+            var orderId = field.dataset.orderId;
+            saveChanges(inputField, fieldId, orderId);
+
+            // Toggle visibility of input and span fields
+            inputField.classList.add('d-none');
+            spanField.classList.remove('d-none');
+        }
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var viewButtons = document.querySelectorAll('.view-order-btn');
+
+
+        viewButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var orderId = button.getAttribute('data-order-id');
+
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var orderDetails = JSON.parse(xhr.responseText);
+                            console.log(orderDetails)
+
+
+                            var modalTitle = document.querySelector('.modal-title');
+                            var listingIdSpan = document.querySelector(
+                                '.modal-body .listing-id');
+                            var nameSpan = document.querySelector(
+                                '.modal-body .listing-name');
+                            var productTableBody = document.querySelector(
+                                '.modal-body table tbody');
+
+                            modalTitle.textContent = 'Order Details';
+                            listingIdSpan.textContent = orderDetails.order_number;
+                            nameSpan.textContent = orderDetails.seller;
+
+                            // Clear previous product entries
+                            productTableBody.innerHTML = '';
+
+
+                            var row = productTableBody.insertRow();
+                            var cell1 = row.insertCell(0);
+                            var cell2 = row.insertCell(1);
+                            cell1.textContent = orderDetails.name; // Product name
+                            cell2.textContent = '$' + orderDetails.price; // Product price
+                            var row = productTableBody.insertRow();
+                            var cell1 = row.insertCell(0);
+                            cell1.textContent = orderDetails.file_name;
+
+
+                            var checkoutUrl = '{% url "posts:checkout" %}?price=' +
+                                orderDetails.price + '&order_id=' + orderDetails
+                                .order_number.replace(/^#/, '');
+
+                            // Update the href attribute of the checkout link
+                            var checkoutLink = document.querySelector('.modal-footer a');
+                            checkoutLink.setAttribute('href', checkoutUrl);
+
+
+                        } else {
+                            console.error('Error fetching order details:', xhr.statusText);
+                        }
+                    }
+                };
+
+                // Adjust the URL endpoint to fetch order details including ID and name
+                xhr.open('GET', '/users/order_details/?order_id=' + orderId);
+                xhr.send();
+            });
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Get the sortable header cells
+      let sortableHeaders = document.querySelectorAll(".sortable");
+    
+      // Add click event listener to each sortable header cell
+      sortableHeaders.forEach(function(header) {
+        header.addEventListener("click", function() {
+          // Get the table body element
+          let tableBody = header.closest("table").querySelector("tbody");
+    
+          // Get the index of the clicked column
+          let columnIndex = Array.prototype.indexOf.call(header.parentNode.children, header);
+    
+          // Get the rows in the table body
+          let rows = Array.from(tableBody.children);
+    
+          // Sort the rows based on the data in the clicked column
+          rows.sort(function(a, b) {
+            let aValue = a.children[columnIndex].textContent.trim();
+            let bValue = b.children[columnIndex].textContent.trim();
+    
+            // Convert the values to numbers if they are numeric
+            let aValueNumeric = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+            let bValueNumeric = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+    
+            // Check if conversion to numbers was successful
+            if (!isNaN(aValueNumeric) && !isNaN(bValueNumeric)) {
+              // If both values are numeric, compare them numerically
+              return bValueNumeric - aValueNumeric; // Sort from highest to lowest
+            } else {
+              // If one or both values are non-numeric, compare them as strings
+              return aValue.localeCompare(bValue, undefined, { numeric: true, sensitivity: "base" });
+            }
+          });
+    
+          // Clear the table body
+          while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+          }
+    
+          // Append the sorted rows back to the table body
+          rows.forEach(function(row) {
+            tableBody.appendChild(row);
+          });
+        });
+      });
+    });
+    
+        </script>
+
+
+
+
+{% endblock %}

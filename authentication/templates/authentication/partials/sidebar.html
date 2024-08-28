@@ -1,0 +1,78 @@
+{% load static %} {% block sidebar %}
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="vertical-menu">
+      <div data-simplebar class="h-100">
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+          <!-- Left Menu Start -->
+          <ul class="metismenu list-unstyled" id="side-menu">
+        <li class="menu-title" key="t-menu">Menu</li>
+ {%  if request.user.is_authenticated %}
+        <li>
+          <a href="{% url 'user_dashboard' %}" class="waves-effect">
+            <i class="bx bxs-dashboard"></i
+            >
+            <span key="t-dashboards">Dashboard</span>
+          </a>
+       
+        </li>
+
+        
+        <li>
+          <a href="{% url 'file_manager' %}" class="waves-effect">
+            <i class="bx bxs-file-blank"></i
+            >
+            <span key="t-dashboards">File Manager</span>
+          </a>
+       
+        </li>
+        
+        
+         <li>
+        <a href="http://65.108.159.44:5000/" class="waves-effect">
+
+                <i class="bx bxs-chart"></i>
+                <span key="t-dashboards">Charts</span>
+            </a>
+        </li>
+        
+        {% if request.user.is_superuser %}
+        <li>
+          <a href="{% url 'customers' %}" class="waves-effect">
+            <i class="bx bxs-user"></i
+            >
+            <span key="t-dashboards">Customers</span>
+          </a>
+       
+        </li>
+     {% endif %}
+     <li>
+      <a href="{% url 'posts:referral_program' %}" class="waves-effect">
+          <i class="fas fa-users"></i> <!-- Use the appropriate FontAwesome class -->
+          <span key="t-dashboards">Referral Program</span>
+      </a>
+       </li>
+
+  {% endif %}
+   <li>
+    
+    <a href="{% url 'posts:marketplace' %}" class="waves-effect">
+      <i class="fas fa-store"></i><!-- Use the appropriate FontAwesome class -->
+        <span key="t-dashboards">Marketplace</span>
+    </a>
+</li>
+{%  if request.user.is_authenticated %}
+<li>
+  <a href="{% url 'marketplaceListings' %}" class="waves-effect">
+      <i class="fas fa-shopping-bag"></i> <!-- Use the appropriate FontAwesome class -->
+      <span key="t-dashboards">My Listings</span>
+  </a>
+   </li>
+   {% endif %}
+          </ul>
+        </div>
+        <!-- Sidebar -->
+      </div>
+    </div>
+    <!-- Left Sidebar End -->
+{% endblock %}
