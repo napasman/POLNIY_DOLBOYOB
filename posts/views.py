@@ -100,6 +100,10 @@ User = get_user_model()
 
 
 def index(request):
+
+    user = request.user
+    api_user = ApiUser.objects.get(user=user)
+    
     BASE_URL = "http://38.242.240.7"
 
     data = {
@@ -116,7 +120,7 @@ def index(request):
     # context = {
     #     "table_results":response.json()["result"]
     # }
-    context = {}
+    context = {'is_referral': api_user.status == 'referral',}
     return render(request, "blog/index.html", context=context)
 
 

@@ -627,6 +627,14 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-12 col-md-5 col-lg-6 order-md-2">
+        
+        {% if is_referral %}
+        <span class="navbar-text">Вы подписаны на Telegram канал</span>
+        {% else %}
+        <!-- Ссылка на Telegram канал -->
+        <a class="nav-link" href="{% url 'subscribe_telegram' %}" target="_blank">@Teletegbot</a>
+        {% endif %}
+        
         <!-- Image -->
         <img
           src="assets/img/illustrations/illustration-2.png"
